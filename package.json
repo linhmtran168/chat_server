@@ -13,6 +13,7 @@
     "socket.io": "*",
     "mongoose": "latest",
     "nodemon": "*",
-    "lodash": "*"
+    "lodash": "*",
+    "winston": "*"
   }
 }

@@ -1,14 +1,17 @@
 /*
  * Module for chat
  */
-var redis = require('redis');
+var redis = require('redis')
+  , Chat = require('../../models/chat');
 
 module.exports = function(io) {
   // Socket io handling
   io.sockets.on('connection', function(socket) {
 
-    // Initial setup for this new socket
-    // 
+    // Log
+    console.log('New user with socketId: ' + socket.id + ':' + socket.handshake.userId);
+    // Save sockedId to the database
+    Chat.saveUserSocketId(socket.handshake.userId, socket.id);
 
     // When there is a new message
     socket.on('message', function(data) {
@@ -17,7 +20,9 @@ module.exports = function(io) {
 
     // When socket disconnect
     socket.on('disconnect', function() {
-      // Todo
+      // Log
+      console.log('Disconnect, to delete: ' + socket.handshake.userId);
+      Chat.removeUserSocketId(socket.handshade.userId);
     });
   });
 };

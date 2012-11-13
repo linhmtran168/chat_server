@@ -4,10 +4,16 @@
  */
 
 var express = require('express')
+  , mongoose = require('mongoose')
   , routes = require('./routes')
   , http = require('http')
   , path = require('path')
-  , socketIO = requie('socket.io');
+  , socketIO = require('socket.io');
+
+// Configure winston
+var winston = require('winston');
+winston.add(winston.transports.File, { filename: './logs/ogorin_chat_access.log' });
+winston.handleExceptions(new winston.transports.File({ filename: './logs/ogorin_chat_err.log' }));
 
 // Create the express and http server instance
 var app = express()
@@ -30,10 +36,12 @@ app.configure(function(){
 
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+  mongoose.connect('mongodb://localhost:27017/ogorin', { user: 'ogorin', pass: 'dragonLinh123' });
 });
 
 app.configure('production', function(){
   app.use(express.errorHandler());
+  mongoose.connect('mongodb://localhost:27017/ogorin', { user: 'ogorinPro', pass: 'ProOgorinMongo' });
 });
 
 // app.get('/', routes.index);
