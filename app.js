@@ -42,6 +42,9 @@ app.configure('production', function(){
 // Create the socketIO instance
 io = require('socket.io').listen(server);
 
+// Configure socketio
+require('./config/socketio')(io);
+
 // HTTP server listen
 server.listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

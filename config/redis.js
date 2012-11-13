@@ -1,6 +1,7 @@
 /*
- * Configure socketIO
+ * Configure 
  */
-module.exports = function(io) {
+// Config password for redis
+var redisConfig = {};
 
-};
+module.exports = redisConfig;
