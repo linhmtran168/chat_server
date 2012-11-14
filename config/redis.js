@@ -1,7 +1,6 @@
 /*
- * Configure 
+ * Configuration for redis
  */
-// Config password for redis
 var redisConfig = {};
 
 if (process.env.NODE_ENV === 'production') {

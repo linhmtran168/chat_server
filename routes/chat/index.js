@@ -85,6 +85,7 @@ module.exports = function(io) {
       console.log('Disconnect, to delete: ' + socket.handshake.userId);
       // When disconnect remove the socketId from the database
       Chat.removeUserSockId(socket.handshake.userId);
+      // Change the status of the user to offline
     });
   });
 };
