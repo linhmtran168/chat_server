@@ -69,7 +69,7 @@ module.exports = {
 
     // Save the new message obj to list of the messages of 2 user
     // Sender
-    redisClient.lpush('chat:' + senderId + ':' + receiverId + ':' + 'messages', JSON.stringify(messageObj), function(err, response) {
+    redisClient.lpush('chat:' + senderId + ':' + receiverId + ':messages', JSON.stringify(messageObj), function(err, response) {
       // If error
       if (err) {
         return callback(err, false);
@@ -80,7 +80,7 @@ module.exports = {
     });
 
     // Receiver
-    redisClient.lpush('chat:' + receiverId + ':' + senderId + ':' + 'messages', JSON.stringify(messageObj), function(err, response) {
+    redisClient.lpush('chat:' + receiverId + ':' + senderId + ':messages', JSON.stringify(messageObj), function(err, response) {
       // If error
       if (err) {
         return callback(err, false);
@@ -105,6 +105,13 @@ module.exports = {
     var argsSender = ['chat:' + senderId + ':conversations', parseInt(timestamp, 10), receiverId];
     var argsReceiver = ['chat:' + receiverId + ':conversations', parseInt(timestamp, 10), senderId];
 
+    // Create the message object
+    var messageObj = {
+      message: message,
+      timestamp: timestamp,
+      senderId: senderId,
+    };
+
     // Add/update the new conversation to the list of sender conversations
     redisClient.zadd(argsSender, function(err, response) {
       if (err) {
@@ -112,7 +119,7 @@ module.exports = {
       }
 
       // Set the last message
-      redisClient.set('chat:' + senderId + ':' + receiverId + ':' + 'lastMessage', message, redis.print);
+      redisClient.set('chat:' + senderId + ':' + receiverId + ':lastMessage', JSON.stringify(messageObj), redis.print);
 
       return callback(null, response);
     });
@@ -124,7 +131,7 @@ module.exports = {
       }
 
       // Set the last message
-      redisClient.set('chat:' + receiverId + ':' + senderId + ':' + 'lastMessage', message, redis.print);
+      redisClient.set('chat:' + receiverId + ':' + senderId + ':lastMessage', JSON.stringify(messageObj), redis.print);
 
       return callback(null, response);
     });

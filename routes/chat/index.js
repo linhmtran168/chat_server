@@ -22,7 +22,9 @@ module.exports = function(io) {
      * @param <Object> data { receiverId: '', timestamp: '', message: '' }
      */
     socket.on('message', function(data) {
-      console.log('Data send from client' + data);
+      // Log
+      console.log('Data send from client:');
+      console.dir(data);
       //---- Send message to the receiver if he/she is online
       Chat.checkReceiverStatus(data.receiverId, function(err, receiverSockId) {
         // If there is a error
@@ -54,7 +56,7 @@ module.exports = function(io) {
       });
 
       //---- Save new conversation to the database
-      Chat.updateConvesationList(socket.handshake.userId, data.receiverId, data.message, data.timestamp, function(err, response) {
+      Chat.updateConversationList(socket.handshake.userId, data.receiverId, data.message, data.timestamp, function(err, response) {
         // If there is a error
         if (err) {
           socket.emit('error', { message: 'There is error saving message to database' });
