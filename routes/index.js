@@ -5,5 +5,5 @@
 
 module.exports = function(app, io) {
   require('./chat')(io);
-  // require('./test')(app);
+  require('./test')(app);
 };
