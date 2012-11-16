@@ -67,6 +67,10 @@ module.exports = {
       senderId: senderId,
     };
 
+    // Save the new keys to redis
+    redisClient.sadd('chat:' + senderId + ':keys', 'chat:' + senderId + ':' + receiverId + ':messages', redis.print);
+    redisClient.sadd('chat:' + receiverId + ':keys', 'chat:' + receiverId + ':' + senderId + ':messages', redis.print);
+
     // Save the new message obj to list of the messages of 2 user
     // Sender
     redisClient.lpush('chat:' + senderId + ':' + receiverId + ':messages', JSON.stringify(messageObj), function(err, response) {
@@ -111,6 +115,14 @@ module.exports = {
       timestamp: timestamp,
       senderId: senderId,
     };
+    
+    // Create the new keys in  users list of keys
+    var senderKeys = ['chat:' + senderId + ':keys', 'chat:' + senderId + ':conversations', 'chat:' + senderId + ':' + receiverId + ':lastMessage'];
+    var receiverKeys = ['chat:' + receiverId + ':keys', 'chat:' + receiverId + ':conversations', 'chat:' + receiverId + ':' + senderId + ':lastMessage'];
+
+    // Add the key to sets in redis
+    redisClient.sadd(senderKeys, redis.print);
+    redisClient.sadd(receiverKeys, redis.print);
 
     // Add/update the new conversation to the list of sender conversations
     redisClient.zadd(argsSender, function(err, response) {
