@@ -2,6 +2,7 @@
  * Module for chat
  */
 var redis = require('redis')
+  , _ = require('lodash')
   , Chat = require('../../models/chat');
 
 module.exports = function(io) {
@@ -26,7 +27,7 @@ module.exports = function(io) {
       console.log('Data send from client:');
       console.dir(data);
       //---- Send message to the receiver if he/she is online
-      Chat.checkReceiverStatus(data.receiverId, function(err, receiverSockId) {
+      Chat.checkReceiverStatus(data.receiverId, function(err, receiverSockIds) {
         // If there is a error
         if (err) {
           socket.emit('error', { message: 'There is error getting socketId from database' });
@@ -34,13 +35,13 @@ module.exports = function(io) {
         }
 
         // Else
-        if (!receiverSockId) {
+        if (!receiverSockIds) {
           console.log('User is offline');
           // Emit notify offline event to the client that send the message
 
           socket.emit('notify-offline', { message: 'The user you want to send message is offline, he/she will receive your message when he/she is online again'  });
         } else {
-          console.log('Successfully getting socket id: ' + receiverSockId + ' of user id: ' + data.receiverId);
+          console.log('Successfully getting socket id for user Id ' + data.receiverId);
 
           // Create the message object
           var messageObj = {
@@ -49,8 +50,10 @@ module.exports = function(io) {
             message: data.message
           };
 
-          // Send the message to the receiver
-          io.sockets.socket(receiverSockId).emit('message-arrived', messageObj);
+          // Send the message to the all the receiver
+          _.forEach(receiverSockIds, function(sockId){
+            io.sockets.socket(sockId).emit('message-arrived', messageObj);
+          });
         }
         
       });
@@ -84,9 +87,9 @@ module.exports = function(io) {
     // When socket disconnect
     socket.on('disconnect', function() {
       // Log
-      console.log('Disconnect, to delete: ' + socket.handshake.userId);
+      console.log('Disconnect: ' + socket.id + ' to delete: ' + socket.handshake.userId);
       // When disconnect remove the socketId from the database
-      Chat.removeUserSockId(socket.handshake.userId);
+      Chat.removeUserSockId(socket.handshake.userId, socket.id);
       // Change the status of the user to offline
     });
   });

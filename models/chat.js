@@ -17,7 +17,7 @@ module.exports = {
    * @return void
    */
   saveUserSockId: function(userId, sockId) {
-    redisClient.set('chat:' + userId + ':sockId', sockId, redis.print);
+    redisClient.sadd('chat:' + userId + ':sockIds', sockId, redis.print);
   },
 
   /**
@@ -25,18 +25,18 @@ module.exports = {
    * @param <String> receiverId
    */
   checkReceiverStatus: function(receiverId, callback) {
-    redisClient.get('chat:' + receiverId + ':sockId', function(err, response) {
+    redisClient.smembers('chat:' + receiverId + ':sockIds', function(err, replies) {
       // If err
       if (err) {
         return callback(err, false);
       }
 
       // If this key not set
-      if (!response) {
+      if (replies.length === 0) {
         return callback(null, null);
       }
 
-      return callback(null, response);
+      return callback(null, replies);
     });
   },
 
@@ -44,10 +44,11 @@ module.exports = {
   /**
    * Function to remove user's sockID from database
    * @param <String> userId
+   * @param <string> sockId
    * @return void
    */
-  removeUserSockId: function(userId) {
-    redisClient.del('chat:' + userId + ':sockId', redis.print);
+  removeUserSockId: function(userId, sockId) {
+    redisClient.srem('chat:' + userId + ':sockIds', sockId, redis.print);
   },
 
   /**
