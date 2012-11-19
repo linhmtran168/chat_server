@@ -36,26 +36,31 @@ module.exports = function(io) {
 
     // Authorization for socketio
     io.set('authorization', function(handshakeData, callback) { 
-      // Log
-      console.log(handshakeData.query.accessToken);
+      if (_.isUndefined(handshakeData.query.userId)) {
+        console.log(handshakeData.query.accessToken);
 
-      // Find the user with the accessToken in the mongo database
-      User.findOne({ 'accessToken': handshakeData.query.accessToken }, function(err, user) {
-        // If an error occures
-        if (err) {
-          return callback(err);
-        }
+        // Find the user with the accessToken in the mongo database
+        User.findOne({ 'accessToken': handshakeData.query.accessToken }, function(err, user) {
+          // If an error occures
+          if (err) {
+            return callback(err);
+          }
 
-        // If there is no user with this accessToken
-        if (!user) {
-          return callback('There is no user with this accessToken', false);
-        }
+          // If there is no user with this accessToken
+          if (!user) {
+            return callback('There is no user with this accessToken', false);
+          }
 
-        // Add the userId to the handshake data
-        handshakeData.userId = user.id;
-        // Process to connect to the socket
+          // Add the userId to the handshake data
+          handshakeData.userId = user.id;
+          // Process to connect to the socket
+          callback(null, true);
+        });
+      } else {
+        // For test
+        handshakeData.userId = handshakeData.query.userId;
         callback(null, true);
-      });
+      }
     });
   });
 
