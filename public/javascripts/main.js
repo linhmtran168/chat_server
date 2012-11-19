@@ -12,7 +12,7 @@ $(function() {
   $('#getin').on('click', function(e) {
     e.preventDefault();
     var userId = $('#user-id').val();
-    socket = io.connect('http://localhost:3100?userId=' + userId);
+    socket = io.connect('http://49.212.161.19:3100?userId=' + userId);
     socket.on('welcome', function (data) {
       console.log(data);
       // Show the logged in info
