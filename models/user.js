@@ -28,6 +28,8 @@ var userSchema = new Schema({
     coords: { type: Array, index: '2d' }
   },
   favoriteUsers: [{ type: ObjectId, ref: 'User' }],
+  viewedUsers: [{ type: ObjectId, ref: 'User' }],
+  viewedBy: [{ type: ObjectId, ref: 'User' }],
   loggedIn: { type: String },
   accessToken: { type: String, index: true },
   createdAt: { type: Date, default: Date.now, index: true },
@@ -39,7 +41,7 @@ userSchema.pre('save', function(next) {
   this.updatedAt = new Date();
 
   // Initial update user avatar based on gender
-  if (_.isUndefined(this.profilePhoto) || _.isEmpty(this.profilePhoto) || this.profilePhoto === 'male_avatar.png' || this.profilePhoto === 'female_avatar.png') {
+  if (_.isUndefined(this.profilePhoto) || _.isEmpty(this.profilePhoto) || this.profilePhoto === 'male_avatar.png' || this.profilePhoto === 'female_avatar.png' || this.profilePhoto === 'default_avatar.png') {
     if (_.isUndefined(this.gender)) {
       this.profilePhoto = 'default_avatar.png';
     }
