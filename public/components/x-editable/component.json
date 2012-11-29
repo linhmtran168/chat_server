@@ -1,0 +1,9 @@
+{
+  "name": "x-editable",
+  "version": "0.0.0",
+  "commit": "b8b91f4e1e03fd5e940e676635717811587e5aac",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/vitalets/x-editable.git"
+  }
+}

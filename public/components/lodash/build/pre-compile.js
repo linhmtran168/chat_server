@@ -13,6 +13,7 @@
     'collection',
     'createCallback',
     'ctor',
+    'guard',
     'hasOwnProperty',
     'index',
     'isArguments',
@@ -27,6 +28,7 @@
     'propertyIsEnumerable',
     'result',
     'skipProto',
+    'source',
     'thisArg',
     'value'
   ];
@@ -63,9 +65,11 @@
     'all',
     'amd',
     'any',
+    'assign',
     'attachEvent',
     'bind',
     'bindAll',
+    'bindKey',
     'chain',
     'clone',
     'collect',
@@ -134,7 +138,6 @@
     'keys',
     'last',
     'lastIndexOf',
-    'lateBind',
     'map',
     'max',
     'memoize',
@@ -212,7 +215,7 @@
       return source;
     }
 
-    // remove copyright to add later in post-compile.js
+    // remove copyright/license header to add later in post-compile.js
     source = source.replace(/\/\*![\s\S]+?\*\//, '');
 
     // add brackets to whitelisted properties so the Closure Compiler won't mung them

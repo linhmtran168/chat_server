@@ -22,6 +22,7 @@
     'detect': 'find',
     'drop': 'rest',
     'each': 'forEach',
+    'extend': 'assign',
     'foldl': 'reduce',
     'foldr': 'reduceRight',
     'head': 'first',
@@ -36,6 +37,7 @@
 
   /** Used to associate real names with their aliases */
   var realToAliasMap = {
+    'assign': ['extend'],
     'contains': ['include'],
     'every': ['all'],
     'filter': ['select'],
@@ -130,11 +132,11 @@
     'after',
     'bind',
     'bindAll',
+    'bindKey',
     'compose',
     'debounce',
     'defer',
     'delay',
-    'lateBind',
     'memoize',
     'once',
     'partial',
@@ -144,6 +146,7 @@
 
   /** List of "Objects" category methods */
   var objectsMethods = [
+    'assign',
     'clone',
     'defaults',
     'extend',
@@ -195,8 +198,11 @@
   var backboneDependencies = [
     'bind',
     'bindAll',
+    'chain',
     'clone',
     'contains',
+    'countBy',
+    'defaults',
     'escape',
     'every',
     'extend',
@@ -215,6 +221,7 @@
     'isFunction',
     'isObject',
     'isRegExp',
+    'isString',
     'keys',
     'last',
     'lastIndexOf',
@@ -222,6 +229,7 @@
     'max',
     'min',
     'mixin',
+    'pick',
     'reduce',
     'reduceRight',
     'reject',
@@ -234,15 +242,16 @@
     'sortedIndex',
     'toArray',
     'uniqueId',
+    'value',
     'without'
   ];
 
   /** List of methods used by Underscore */
   var underscoreMethods = _.without.apply(_, [allMethods].concat([
+    'bindKey',
     'forIn',
     'forOwn',
     'isPlainObject',
-    'lateBind',
     'merge',
     'partial'
   ]));
@@ -393,7 +402,7 @@
           func(1, noop);
         } else if (methodName == 'bindAll') {
           func({ 'noop': noop });
-        } else if (methodName == 'lateBind') {
+        } else if (methodName == 'bindKey') {
           func(lodash, 'identity', array, string);
         } else if (/^(?:bind|partial)$/.test(methodName)) {
           func(noop, object, array, string);
@@ -474,7 +483,8 @@
 
         var data = {
           'a': { 'people': ['moe', 'larry', 'curly'] },
-          'b': { 'epithet': 'stooge' }
+          'b': { 'epithet': 'stooge' },
+          'c': { 'name': 'ES6' }
         };
 
         context._ = _;
@@ -483,6 +493,7 @@
 
         equal(templates.a(data.a).replace(/[\r\n]+/g, ''), '<ul><li>moe</li><li>larry</li><li>curly</li></ul>', basename);
         equal(templates.b(data.b), 'Hello stooge.', basename);
+        equal(templates.c(data.c), 'Hello ES6!', basename);
         delete _.templates;
         start();
       });
@@ -524,14 +535,14 @@
             context = createContext();
 
         var data = {
-          'c': { 'name': 'Mustache' }
+          'd': { 'name': 'Mustache' }
         };
 
         context._ = _;
         vm.runInContext(source, context);
         var templates = context._.templates;
 
-        equal(templates.c(data.c), 'Hello Mustache!', basename);
+        equal(templates.d(data.d), 'Hello Mustache!', basename);
         start();
       });
     });
@@ -550,7 +561,7 @@
       });
     });
 
-    asyncTest('debug custom', function () {
+    asyncTest('debug custom', function() {
       var start = _.once(QUnit.start);
       build(['-d', '-s', 'backbone'], function(source, filePath) {
         equal(path.basename(filePath, '.js'), 'lodash.custom');
@@ -566,7 +577,7 @@
       });
     });
 
-    asyncTest('minified custom', function () {
+    asyncTest('minified custom', function() {
       var start = _.once(QUnit.start);
       build(['-m', '-s', 'backbone'], function(source, filePath) {
         equal(path.basename(filePath, '.js'), 'lodash.custom.min');
@@ -631,7 +642,7 @@
 
       build(['-s', 'underscore'], function(source, filePath) {
         var last,
-            array = [{ 'value': 1 }, { 'value': 2 }],
+            array = [{ 'a': 1, 'b': 2 }, { 'a': 2, 'b': 2 }],
             basename = path.basename(filePath, '.js'),
             context = createContext();
 
@@ -642,15 +653,28 @@
         equal(object.fn(), 2, '_.bind: ' + basename);
 
         ok(lodash.clone(array, true)[0] === array[0], '_.clone should be shallow: ' + basename);
+        equal(lodash.contains({ 'a': 1, 'b': 2 }, 1), true, '_.contains should work with objects: ' + basename);
         equal(lodash.contains([1, 2, 3], 1, 2), true, '_.contains should ignore `fromIndex`: ' + basename);
         equal(lodash.every([true, false, true]), false, '_.every: ' + basename);
 
-        var actual = lodash.forEach(array, function(value) {
+        function Foo() {}
+        Foo.prototype = { 'a': 1 };
+
+        deepEqual(lodash.defaults({}, new Foo), Foo.prototype, '_.defaults should assign inherited `source` properties: ' + basename);
+        deepEqual(lodash.extend({}, new Foo), Foo.prototype, '_.extend should assign inherited `source` properties: ' + basename);
+
+        actual = lodash.find(array, function(value) {
+          return 'a' in value;
+        });
+
+        equal(actual, _.first(array), '_.find: ' + basename);
+
+        actual = lodash.forEach(array, function(value) {
           last = value;
           return false;
         });
 
-        equal(last.value, 2, '_.forEach should not exit early: ' + basename);
+        equal(last, _.last(array), '_.forEach should not exit early: ' + basename);
         equal(actual, undefined, '_.forEach should return `undefined`: ' + basename);
 
         object = { 'length': 0, 'splice': Array.prototype.splice };
@@ -670,6 +694,7 @@
 
         equal(lodash.some([false, true, false]), true, '_.some: ' + basename);
         equal(lodash.template('${a}', object), '${a}', '_.template should ignore ES6 delimiters: ' + basename);
+
         start();
       });
     });
@@ -685,14 +710,15 @@
         var lodash = context._;
 
         _.each([
+          'assign',
+          'bindKey',
           'forIn',
           'forOwn',
           'isPlainObject',
-          'lateBind',
           'merge',
           'partial'
         ], function(methodName) {
-          equal(lodash[methodName], undefined, '_.' + methodName + ' exists: ' + basename);
+          equal(lodash[methodName], undefined, '_.' + methodName + ' should not exist: ' + basename);
         });
 
         start();
@@ -984,7 +1010,9 @@
         build(['--silent'].concat(command.split(' ')), function(source, filePath) {
           var methodNames,
               basename = path.basename(filePath, '.js'),
-              context = createContext();
+              context = createContext(),
+              isUnderscore = /underscore/.test(command),
+              exposeAssign = !isUnderscore;
 
           try {
             vm.runInContext(source, context);
@@ -999,8 +1027,12 @@
           if (/backbone/.test(command) && !methodNames) {
             methodNames = backboneDependencies.slice();
           }
-          if (/underscore/.test(command) && !methodNames) {
-            methodNames = underscoreMethods.slice();
+          if (isUnderscore) {
+            if (methodNames) {
+              exposeAssign = methodNames.indexOf('assign') > -1;
+            } else {
+              methodNames = underscoreMethods.slice();
+            }
           }
           // add method names explicitly by category
           if (/category/.test(command)) {
@@ -1034,6 +1066,9 @@
           // remove nonexistent and duplicate method names
           methodNames = _.uniq(_.intersection(allMethods, expandMethodNames(methodNames)));
 
+          if (!exposeAssign) {
+            methodNames = _.without(methodNames, 'assign');
+          }
           var lodash = context._ || {};
           methodNames.forEach(function(methodName) {
             testMethod(lodash, methodName, basename);
