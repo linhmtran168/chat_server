@@ -1,0 +1,37 @@
+div.navbar.navbar-static-top
+  div.navbar-inner
+    div.container
+      a.brand(href='/') Ogorin Part-timer Portal
+
+      if currentUser
+        ul.nav
+          if slug === 'profile'
+            li.active: a(href='/profile') Your Profile
+          else
+            li: a(href='/profile') Your Profile
+
+          if slug === 'explore'
+            li.active: a(href='/explore') Explore User
+          else
+            li: a(href='/explore') Explore User
+            
+        ul.nav.pull-right
+          li.divider-vertical
+          li.dropdown
+            div.btn-group
+              button.btn
+                i.icon-user
+                &nbsp; 
+                =currentUser.username
+              button.btn.dropdown-toggle(href='#', data-toggle='dropdown')
+                span.caret
+
+              ul.dropdown-menu
+                li
+                  a(href='/user/account')
+                    i.icon-th-large
+                    | &nbsp;Dashboard
+                li 
+                  a(href='/logout')
+                    i.icon-eject
+                    | &nbsp;Logout

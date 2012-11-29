@@ -1,0 +1,85 @@
+extends ../layout
+
+append head
+  link(rel='stylesheet', href='http://cdn.leafletjs.com/leaflet-0.4/leaflet.css')
+  //if lte IE 8
+    link(rel='stylesheet', href='http://cdn.leafletjs.com/leaflet-0.4/leaflet.ie.css')
+
+block content
+  .tab-bar
+    ul.nav.nav-tabs
+      li.active.offset3
+        a(href="/user") Your Profile
+      li
+        a(href="#") Your Favorite Users
+
+  #profile-box.span12.offset2.row
+    #details.span4.thumbnail
+      img(src='http://49.212.161.19:3050/#{ user.profilePhoto }')
+
+      .caption
+        h4=user.username
+        p
+          ul
+            li
+              strong Email: 
+              |   #{ user.email }
+
+            if user.gender 
+              li
+                strong Gender:
+                |  #{ user.gender }
+
+            if user.about
+              li
+                strong About:
+                |  #{ user.about }
+
+            if user.birthday
+              li
+                strong Birthday:
+                |  #{ user.birthday }
+
+            if user.screenName
+              li
+                strong Screen Name:
+                |  #{ user.screenName }
+
+            if user.occupation
+              li
+                strong Occupation:
+                |  #{ user.occupation }
+
+            if user.bloodType
+              li
+                strong Blood Type:
+                |  #{ user.bloodType }
+
+            if user.lastLocation.name
+              li
+                strong Last Location: 
+                |  #{ user.lastLocation.name }
+            li
+              strong Status:&nbsp; 
+                if user.status === 'online'
+                  span.label.label-success=user.status.toUpperCase()
+                else if user.status === 'offline'
+                  span.label=user.status.toUpperCase()
+                else
+                  span.label.label-important=user.status.toUpperCase()
+        p
+          #profile-options
+            if user.status === 'banned'
+              a.btn.btn-info.span1(href='/user/enable/#{ user.id }') Enable
+            else
+              a.btn.span1(href='/user/ban/#{ user.id }') Ban
+            a.btn.span1.btn-danger(href='/user/delete/#{ user.id }') Delete
+
+    #map-box.span6
+      input#latitude(type='hidden', value='#{ user.lastLocation.coords[1] }')
+      input#longitude(type='hidden', value='#{ user.lastLocation.coords[0] }')
+      input#user-id(type='hidden', value='#{ user.id }')
+      #map
+
+prepend scripts
+  script(src="http://cdn.leafletjs.com/leaflet-0.4/leaflet.js")

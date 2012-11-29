@@ -1,0 +1,85 @@
+extends ../layout
+
+append head
+  link(rel='stylesheet', href='http://cdn.leafletjs.com/leaflet-0.4/leaflet.css')
+  //if lte IE 8
+    link(rel='stylesheet', href='http://cdn.leafletjs.com/leaflet-0.4/leaflet.ie.css')
+
+block content
+  .tabbable.tab-bar
+    ul.nav.nav-tabs
+      li.active.offset3
+        a(href="#tab1", data-toggle="tab") Search by Location
+      li
+        a(href="#tab2", data-toggle="tab") Search by Username
+
+    .tab-content
+      #tab2.tab-pane.fade
+        .search-box.row
+          form#user-form(action='/user/search-user', method='get')
+            .row
+              .span8.offset6
+                .input-append
+                  if typeof(searchKey) !== 'undefined'
+                    input#search-username.input-xxlarge(type='text', name='searchUsername', placeholder='Username', value='#{ searchKey }')
+                  else
+                    input#search-username.input-xxlarge(type='text', name='search', placeholder='Username')
+
+                  span.add-on
+                    i.icon-search
+            .row
+              #search-options.span9.offset7
+                  button.btn(type='submit') Search Username
+                  select(name='statusOption')
+                    option(value='all') All users
+                    option(value='banned') Only banned users
+                    option(value='online') Only online users
+                    option(value='offline') Only offline users
+
+
+        #users-box.span12.offset3.row
+          ul#users-grid.thumbnails
+            if typeof(users) !== 'undefined'
+              if users.length !== 0
+                for user in users
+                  li.span2
+                    .thumbnail
+                      .thumbnail-img-div
+                        a(href='/user/#{ user.id }')
+                          img(src='http://49.212.161.19:3050/#{ user.profilePhoto }')
+                      .caption
+                        h5=user.username
+                        p
+                          em Status:&nbsp; 
+                          if user.status === 'online'
+                            span.label.label-success=user.status.toUpperCase()
+                          else if user.status === 'offline'
+                            span.label=user.status.toUpperCase()
+                          else
+                            span.label.label-important=user.status.toUpperCase()
+
+      #tab1.tab-pane.active
+        if typeof(message) !== 'undefined' && message.length !== 0
+          #message-box
+          .row
+            .alert.alert-error.span5.offset6
+                button.close(type='button', data-dismiss='alert') x
+                =message
+
+        .search-box.row
+          form#location-form(action='/user/search-location', method='get')
+              .span8.offset6
+                .input-append
+                  if typeof(searchKey) !== 'undefined'
+                    input#search-location.span5(type='text', name='searchLocation', placeholder='Location', value='#{ searchKey }')
+                  else
+                    input#search-location.span6(type='text', name='searchLocation', placeholder='Location')
+                  span.add-on
+                    i.icon-search
+
+        .row
+          #index-map
+
+prepend scripts
+  script(src="http://cdn.leafletjs.com/leaflet-0.4/leaflet.js")
+  script(src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=true")

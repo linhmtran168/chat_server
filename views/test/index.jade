@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  .row
+    #title.span7.offset5
+      h1= title
+      p Welcome to #{title}
+  .row
+    #chat-login.span4.offset4
+      form#user-form.form-horizontal
+        fieldset
+          legend Chat
+          label User Id
+          input#user-id(type='text', placeholder='User Id')
+          span.help-block
+          button#getin.btn(type='submit') Use this id 
+      #gotin
+        p 
+          strong.status Currently, you are
+        button#getout.btn Get out
+    #chat.span7
+      #partner
+        input#partner-id(type='text', placeholder='Partner Id')
+      #chat-box
+      input#message.input-xlarge(type='text', placeholder='Message');

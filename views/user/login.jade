@@ -1,0 +1,29 @@
+extends ../layout
+
+block content
+  if message.length !== 0
+    .row
+      .alert.alert-error.span5.offset7.login-alert
+        button.close(type='button', data-dismiss='alert') x
+        =message
+
+  .row
+    .span7.offset6.login-block
+      form.form(action='/login', method='post')
+        legend.login-legend Login
+        div.offset1.login-inputs
+          div.control-group
+            label.control-label(for='username') Username:
+            div.controls
+              input#username.input-xlarge(type='text', name='username',
+              placeholder='Username')
+              
+          div.control-group
+            label.control-label(for='password') Password:
+            div.controls
+              input#password.input-xlarge(type='password', name='password',
+              placeholder='Password')
+
+          div.contrl-group.login-submit
+            div.controls
+              button.btn.btn-large(type='submit') Login
