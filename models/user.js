@@ -14,6 +14,7 @@ var userSchema = new Schema({
   username: { type: String, required: true, index: { unique: true }},
   email: { type: String, required: true, index: { unique: true }},
   hash: { type: String, required: true },
+  type: { type: String, enum: ['real', 'fake'], index: true },
   profilePhoto: { type: String },
   screenName: { type: String },
   about: { type: String },
@@ -98,9 +99,9 @@ userSchema.method('verifyPassword', function(password, callback) {
   bcrypt.compare(password, this.hash, callback);
 });
 
-// Method to login a user
+// Method to login a fake user
 userSchema.static('authenticate', function(username, password, callback) {
-  this.findOne({ username: username }, function(err, user) {
+  this.findOne({ username: username, type: 'fake' }, function(err, user) {
     // If error return error          
     console.log(util.inspect(user));
     if (err) {
@@ -109,7 +110,7 @@ userSchema.static('authenticate', function(username, password, callback) {
 
     // If no user return false
     if (!user) {
-      return callback({ type: 'no-user' }, false, { message: "No user with this username" });
+      return callback(null, false, { message: "No user with this username" });
     }
 
     // Verify Password
@@ -121,12 +122,12 @@ userSchema.static('authenticate', function(username, password, callback) {
 
       // If password not corret return false
       if (!isCorrect) {
-        return callback({ type: 'password' }, false, { message: "Wrong password" });
+        return callback(null, false, { message: "Wrong password" });
       }
 
       // If user is banned return false
       if (user.status === "banned") {
-        return callback({ type: 'banned' }, false, { message: "You are currently banned" });
+        return callback(null, false, { message: "You are currently banned" });
       }
 
       // Return the user

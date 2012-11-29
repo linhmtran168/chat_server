@@ -163,6 +163,42 @@
 
   /*--------------------------------------------------------------------------*/
 
+  QUnit.module('lodash.assign');
+
+  (function() {
+    test('should not error on `null` or `undefined` sources (test in IE < 9)', function() {
+      try {
+        deepEqual(_.assign({}, null, undefined, { 'a': 1 }), { 'a': 1 });
+      } catch(e) {
+        ok(false);
+      }
+    });
+
+    test('skips the prototype property of functions (test in Firefox < 3.6, Opera > 9.50 - Opera < 11.60, and Safari < 5.1)', function() {
+      function Foo() {}
+      Foo.prototype.c = 3;
+
+      Foo.a = 1;
+      Foo.b = 2;
+
+      var expected = { 'a': 1, 'b': 2 };
+      deepEqual(_.assign({}, Foo), expected);
+
+      Foo.prototype = { 'c': 3 };
+      deepEqual(_.assign({}, Foo), expected);
+    });
+
+    test('should work with `_.reduce`', function() {
+      var actual = { 'a': 1},
+          array = [{ 'b': 2 }, { 'c': 3 }];
+
+      _.reduce(array, _.assign, actual);
+      deepEqual(actual, { 'a': 1, 'b': 2, 'c': 3});
+    });
+  }());
+
+  /*--------------------------------------------------------------------------*/
+
   QUnit.module('lodash.bind');
 
   (function() {
@@ -172,6 +208,29 @@
 
       bound(['b'], 'c');
       deepEqual(args, ['a', ['b'], 'c']);
+    });
+  }());
+
+  /*--------------------------------------------------------------------------*/
+
+  QUnit.module('lodash.bindKey');
+
+  (function() {
+    test('should work when the target function is overwritten', function() {
+      var object = {
+        'name': 'moe',
+        'greet': function(greeting) {
+          return greeting + ': ' + this.name;
+        }
+      };
+
+      var func = _.bindKey(object, 'greet', 'hi');
+      equal(func(), 'hi: moe');
+
+      object.greet = function(greeting) {
+        return greeting + ' ' + this.name + '!';
+      };
+      equal(func(), 'hi moe!');
     });
   }());
 
@@ -385,37 +444,23 @@
 
   /*--------------------------------------------------------------------------*/
 
-  QUnit.module('lodash.extend');
+  QUnit.module('source property checks');
 
-  (function() {
-    test('should not error on `null` or `undefined` sources (test in IE < 9)', function() {
-      try {
-        deepEqual(_.extend({}, null, undefined, { 'a': 1 }), { 'a': 1 });
-      } catch(e) {
-        ok(false);
-      }
-    });
+  _.each(['assign', 'defaults'], function(methodName) {
+    var func = _[methodName];
 
-    test('skips the prototype property of functions (test in Firefox < 3.6, Opera > 9.50 - Opera < 11.60, and Safari < 5.1)', function() {
+    test('lodash.' + methodName + ' should not assign inherited `source` properties', function() {
       function Foo() {}
-      Foo.prototype.c = 3;
-
-      Foo.a = 1;
-      Foo.b = 2;
-
-      var expected = { 'a': 1, 'b': 2 };
-      deepEqual(_.extend({}, Foo), expected);
-
-      Foo.prototype = { 'c': 3 };
-      deepEqual(_.extend({}, Foo), expected);
+      Foo.prototype = { 'a': 1 };
+      deepEqual(func({}, new Foo), {});
     });
-  }());
+  });
 
   /*--------------------------------------------------------------------------*/
 
   QUnit.module('strict mode checks');
 
-  _.each(['bindAll', 'defaults', 'extend'], function(methodName) {
+  _.each(['assign', 'bindAll', 'defaults'], function(methodName) {
     var func = _[methodName];
 
     test('lodash.' + methodName + ' should not throw strict mode errors', function() {
@@ -980,29 +1025,6 @@
 
   /*--------------------------------------------------------------------------*/
 
-  QUnit.module('lodash.lateBind');
-
-  (function() {
-    test('should work when the target function is overwritten', function() {
-      var object = {
-        'name': 'moe',
-        'greet': function(greeting) {
-          return greeting + ': ' + this.name;
-        }
-      };
-
-      var func = _.lateBind(object, 'greet', 'hi');
-      equal(func(), 'hi: moe');
-
-      object.greet = function(greeting) {
-        return greeting + ' ' + this.name + '!';
-      };
-      equal(func(), 'hi moe!');
-    });
-  }());
-
-  /*--------------------------------------------------------------------------*/
-
   QUnit.module('lodash.map');
 
   (function() {
@@ -1134,6 +1156,14 @@
     test('should work with four arguments', function() {
       var expected = { 'a': 4 };
       deepEqual(_.merge({ 'a': 1 }, { 'a': 2 }, { 'a': 3 }, expected), expected);
+    });
+
+    test('should work with `_.reduce`', function() {
+      var actual = { 'a': 1},
+          array = [{ 'b': 2 }, { 'c': 3 }];
+
+      _.reduce(array, _.merge, actual);
+      deepEqual(actual, { 'a': 1, 'b': 2, 'c': 3});
     });
   }(1, 2, 3));
 
@@ -1833,14 +1863,13 @@
       deepEqual(_.where(array, { 'a': 1, 'b': 2 }), [{ 'a': 1, 'b': 2 }]);
     });
 
-    test('should filter by inherited properties', function() {
+    test('should not filter by inherited properties', function() {
       function Foo() {}
-      Foo.prototype = { 'b': 2 };
+      Foo.prototype = { 'a': 2 };
 
       var properties = new Foo;
-      properties.a = 1;
-
-      deepEqual(_.where(array, properties), [{ 'a': 1, 'b': 2 }]);
+      properties.b = 2;
+      deepEqual(_.where(array, properties), [{ 'a': 1, 'b': 2 }, { 'a': 2, 'b': 2 }]);
     });
 
     test('should filter by problem JScript properties (test in IE < 9)', function() {

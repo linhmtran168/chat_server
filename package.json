@@ -10,10 +10,18 @@
     "jade": "*",
     "less-middleware": "*",
     "redis": "*",
+    "connect-redis": "*",
     "socket.io": "*",
     "mongoose": "latest",
     "nodemon": "*",
     "lodash": "*",
-    "winston": "*"
+    "passport" : "*",
+    "passport-local": "*",
+    "connect-flash": "*",
+    "moment": "*",
+    "lodash": "*",
+    "winston": "*",
+    "imagemagick": "*",
+    "express-validator": "*"
   }
 }
