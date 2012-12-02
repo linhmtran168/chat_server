@@ -108,8 +108,8 @@ module.exports = {
    */
   updateConversationList: function(senderId, receiverId, message, timestamp, currentTimestamp, callback) {
     // Create arguments array for 2 list sender and receiver
-    var argsSender = ['chat:' + senderId + ':conversations', parseInt(currentTimestamp, 10), receiverId];
-    var argsReceiver = ['chat:' + receiverId + ':conversations', parseInt(currentTimestamp, 10), senderId];
+    var argsSender = ['chat:' + senderId + ':conversations', currentTimestamp, receiverId];
+    var argsReceiver = ['chat:' + receiverId + ':conversations', currentTimestamp, senderId];
 
     // Create the message object
     var messageObj = {
