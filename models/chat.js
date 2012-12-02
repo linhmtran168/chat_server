@@ -76,6 +76,9 @@ module.exports = {
     redisClient.sadd('chat:' + senderId + ':keys', 'chat:' + senderId + ':' + receiverId + ':messages', redis.print);
     redisClient.sadd('chat:' + receiverId + ':keys', 'chat:' + receiverId + ':' + senderId + ':messages', redis.print);
 
+    // Log
+    console.log(messageObj);
+
     // Save the new message obj to list of the messages of 2 user
     // Sender
     redisClient.lpush('chat:' + senderId + ':' + receiverId + ':messages', JSON.stringify(messageObj), function(err, response) {
