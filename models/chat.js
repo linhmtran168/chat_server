@@ -62,6 +62,9 @@ module.exports = {
    */
   addMessageToConversation: function(senderId, receiverId, message, timestamp, currentTimestamp, callback) {
     // Create the message object
+    // Log
+    console.log(currentTimestamp);
+
     var messageObj = {
       message: message,
       deviceTimestamp: timestamp,
