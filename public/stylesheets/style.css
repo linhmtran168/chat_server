@@ -5105,6 +5105,51 @@ a.badge:hover {
   width: 700px;
   height: 500px;
 }
+/* Current user profile view */
+#image-box {
+  margin-top: 20px;
+}
+#image-box #profile-image {
+  padding-bottom: 10px;
+  margin-left: 0px;
+}
+#image-box #profile-image #image-options {
+  margin-top: 20px;
+  text-align: center;
+}
+#image-box #profile-image #image-options a {
+  margin-top: 10px;
+}
+#info-box {
+  margin-left: 50px;
+  margin-top: 20px;
+}
+#info-box table.info-table {
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+}
+#info-box table.info-table .user-label {
+  width: 25%;
+  font-weight: bold;
+}
+#info-box .datepicker td,
+#info-box .datepicker th {
+  text-align: center;
+}
+#photo-modal .uploaded-image {
+  width: 220px;
+  margin-left: 150px;
+}
+#photo-modal .align-image {
+  margin-left: 150px;
+}
+#photo-modal .image-buttons {
+  margin-top: 10px;
+  text-align: center;
+}
+#photo-modal .image-buttons a {
+  margin-left: 20px;
+}
 /* Test view */
 #chat-box {
   position: relative;

@@ -60,11 +60,12 @@ module.exports = {
    * @param <Function> callback
    * @return void
    */
-  addMessageToConversation: function(senderId, receiverId, message, timestamp, callback) {
+  addMessageToConversation: function(senderId, receiverId, message, timestamp, currentTimestamp, callback) {
     // Create the message object
     var messageObj = {
       message: message,
-      timestamp: timestamp,
+      deviceTimestamp: timestamp,
+      timestamp: currentTimestamp,
       senderId: senderId,
     };
 
@@ -105,15 +106,16 @@ module.exports = {
    * @param <Function> callback
    * @return void
    */
-  updateConversationList: function(senderId, receiverId, message, timestamp, callback) {
+  updateConversationList: function(senderId, receiverId, message, timestamp, currentTimestamp, callback) {
     // Create arguments array for 2 list sender and receiver
-    var argsSender = ['chat:' + senderId + ':conversations', parseInt(timestamp, 10), receiverId];
-    var argsReceiver = ['chat:' + receiverId + ':conversations', parseInt(timestamp, 10), senderId];
+    var argsSender = ['chat:' + senderId + ':conversations', parseInt(currentTimestamp, 10), receiverId];
+    var argsReceiver = ['chat:' + receiverId + ':conversations', parseInt(currentTimestamp, 10), senderId];
 
     // Create the message object
     var messageObj = {
       message: message,
-      timestamp: timestamp,
+      deviceTimestamp: timestamp,
+      timestamp: currentTimestamp,
       senderId: senderId,
     };
     

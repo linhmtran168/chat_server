@@ -1,5 +1,13 @@
 $(function() {
 
+  /* 
+   * Current user profile view,
+   */
+  // Load function for x-editatable
+  if ($('#info-box').length !== 0) {
+    OG.editable.initialize();
+  }
+
   /*
    * If is the profile view, and have a #map, initialize the map
    */
@@ -53,21 +61,5 @@ $(function() {
 
     return false;
   });
-
-  /*
-   * Search for parttimer part
-   */
-  $('#parttimer-form').submit(function(e) {
-    e.preventDefault();
-    // Call the method to send request to sever
-    OG.connect.getParttimers();
-
-    return false;
-  });
-
-  /*
-   * Create pattimer form validation
-   */
-  $('#create-parttimer input').not('[type=submit]').jqBootstrapValidation();
 
 });

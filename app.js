@@ -37,6 +37,9 @@ app.configure(function(){
   app.use(passport.session());
   app.use(flash());
 
+  // Set up CSRF
+  app.use(express.csrf());
+
   // Authentication configuration
   app.use(function(req, res, next) {
     // Set the local user = req.user

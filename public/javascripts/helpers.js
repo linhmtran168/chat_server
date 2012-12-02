@@ -314,5 +314,84 @@
     }
   };
 
+  /*
+   * Module to integreate x-editatble to the app
+   */
+  window.OG.editable = {
+    /*
+     * Function to intialize x-ediatable
+     */
+    initialize: function() {
+      // Initialize the update url and the _csrf key
+      var updateUrl = '/user/update';
+      var csrfKey = $('#csrf').val();
+
+      // Add editable function to the input
+      $('#gender').editable({
+        source: [
+          { value: 'male', text: 'Male' },
+          { value: 'female', text: 'Female' }
+        ],
+        url: updateUrl,
+        params: {
+          '_csrf': csrfKey
+        }
+      });
+
+      $('#status-message').editable({
+        url: updateUrl,
+        params: {
+          '_csrf': csrfKey
+        }
+      });
+
+      $('#screen-name').editable({
+        url: updateUrl,
+        params: {
+          '_csrf': csrfKey
+        }
+      });
+
+      $('#blood-type').editable({
+        source: [
+          { value: 'O', text: 'O' },
+          { value: 'A', text: 'A' },
+          { value: 'B', text: 'B' },
+          { value: 'AB', text: 'AB' }
+        ],
+        url: updateUrl,
+        params: {
+          '_csrf': csrfKey
+        },
+      });
+      
+      $('#occupation').editable({
+        url: updateUrl,
+        params: {
+          '_csrf': csrfKey
+        }
+      });
+
+      $('#about').editable({
+        url: updateUrl,
+        params: {
+          '_csrf': csrfKey
+        }
+      });
+
+      $('#birthday').editable({
+        format: 'yyyy-mm-dd',
+        viewformat: 'dd/mm/yyyy',
+        datepicker: {
+          weekStart: 1
+        },
+        url: updateUrl,
+        params: {
+          '_csrf': csrfKey
+        }
+      });
+    }
+  };
+
 }());
 

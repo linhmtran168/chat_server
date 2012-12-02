@@ -10,15 +10,19 @@ module.exports = function(app) {
   var userCtrl = require('./user');
 
   // Homepage route
-  app.get('/', helpers.ensureAuthenticated, userCtrl.index);
+  app.get('/', [helpers.ensureAuthenticated, helpers.csrf], userCtrl.index);
 
   // Route for login
-  app.get('/login', [helpers.ensureNotAuthenticated], userCtrl.login);
+  app.get('/login', [helpers.ensureNotAuthenticated, helpers.csrf], userCtrl.login);
   app.post('/login', [helpers.ensureNotAuthenticated, passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login',
     failureFlash: true,
   })]);
+
+  // Route for a user to update their information
+  app.post('/user/update', helpers.ensureAuthenticated, userCtrl.updateProfileAPI);
+  app.post('/user/change-photo', helpers.ensureAuthenticated, userCtrl.uploadPhoto);
 
   // Route for logout
   app.get('/logout', [helpers.ensureAuthenticated], userCtrl.logout);

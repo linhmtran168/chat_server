@@ -497,9 +497,4 @@ $(document).ready(function() {
     strictEqual(history.getFragment('fragment   '), 'fragment');
   });
 
-  test("#1820 - Leading slash and trailing space.", 1, function() {
-    var history = new Backbone.History;
-    strictEqual(history.getFragment('/fragment '), 'fragment');
-  });
-
 });

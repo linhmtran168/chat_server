@@ -13,73 +13,99 @@ block content
       li
         a(href="#") Your Favorite Users
 
-  #profile-box.span12.offset2.row
-    #details.span4.thumbnail
-      img(src='http://49.212.161.19:3050/#{ user.profilePhoto }')
+  #image-box.span3.offset3.row
+    #profile-image.span3.thumbnail
+      img.span3(src='/images/#{ user.profilePhoto }')
 
       .caption
-        h4=user.username
-        p
-          ul
-            li
-              strong Email: 
-              |   #{ user.email }
+        #image-options
+          a.btn.btn-info(href='#photo-modal', data-toggle='modal') Change Photo
 
-            if user.gender 
-              li
-                strong Gender:
-                |  #{ user.gender }
+  #info-box.span9
+    input#csrf(type='hidden', name='_csrf', value=token)
+    table.info-table.table.table-bordered.table-hover
+      tr
+        td.user-label Username
+        td=user.username 
+      tr
+        td.user-label Email
+        td=user.email 
+      tr
+        td.user-label Screen Name
+        td
+          if user.screenName
+            a#screen-name(href='#', data-type='text', data-pk=user.id, data-name='screenName', data-original-title='Ogorin Screen Name')=user.screenName
+          else
+            a#screen-name(href='#', data-type='text', data-pk=user.id, data-name='screenName', data-original-title='Ogorin Screen Name')
+      tr
+        td.user-label Status Message
+        td
+          if user.statusMessage
+            a#status-message(href='#', data-type='textarea', data-pk=user.id, data-name='statusMessage', data-original-title='Status Message')=user.statusMessage
+          else
+            a#status-message(href='#', data-type='textarea', data-pk=user.id, data-name='statusMessage', data-inputclass='span3', data-original-title='Status Message')
+      tr
+        td.user-label Gender
+        td
+          if user.gender
+            a#gender(href='#', data-type='select', data-pk=user.id, data-name='gender', data-original-title='Select your gender')=user.gender
+          else
+            a#gender(href='#', data-type='select', data-pk=user.id, data-name='gender', data-value, data-prepend='Not selected', data-original-title='Select your gender')
+      tr
+        td.user-label Birthday
+        td
+          if user.birthday
+            a#birthday(href='#', data-type='date', data-pk=user.id, data-name='birthday', data-original-title='Your birthday')=user.birthday
+          else
+            a#birthday(href='#', data-type='date', data-pk=user.id, data-name='birthday', data-original-title='Your birthday')
+      tr
+        td.user-label About
+        td
+          if user.about
+            a#about(href='#', data-type='textarea', data-pk=user.id, data-name='about', data-original-title='About you')=user.about
+          else
+            a#about(href='#', data-type='textarea', data-pk=user.id, data-name='about', data-original-title='About you')
+      tr
+        td.user-label Occupation
+        td
+          if user.occupation
+            a#occupation(href='#', data-type='text', data-pk=user.id, data-name='occupation', data-original-title='Your occupation')=user.occupation
+          else
+            a#occupation(href='#', data-type='text', data-pk=user.id, data-name='occupation', data-original-title='Your occupation')
+      tr
+        td.user-label Blood Type
+        td
+          if user.bloodType
+            a#blood-type(href='#', data-type='select', data-pk=user.id, data-name='bloodType', data-original-title='Your blood type')=user.bloodType
+          else
+            a#blood-type(href='#', data-type='select', data-pk=user.id, data-value, data-prepend='Not selected', data-name='bloodType', data-original-title='Your blood type')
 
-            if user.about
-              li
-                strong About:
-                |  #{ user.about }
+  #photo-modal.modal.hide.fade(tabindex='-1', role='dialog', aria-labelledby='modal-label')
+    form(action='/user/change-photo/', method='post', enctype='multipart/form-data')
+      .modal-header
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+        h3#modal-label Change profile photo
 
-            if user.birthday
-              li
-                strong Birthday:
-                |  #{ user.birthday }
+      .modal-body
+        .fileupload.fileupload-new(data-provides='fileupload')
+          .fileupload-new.thumbnail.align-image
+            img.span3(src='/images/#{ user.profilePhoto }')
+          .fileupload-preview.fileupload-exists.thumbnail.uploaded-image
+          .image-buttons
+            span.btn.btn-file
+              span.fileupload-new Select image
+              span.fileupload-exists Change
+              input(type='file', name='profilePhoto')
+              input(type='hidden', name='_csrf', value=token)
 
-            if user.screenName
-              li
-                strong Screen Name:
-                |  #{ user.screenName }
+            a.btn.fileupload-exists(href='#', data-dismiss='fileupload') Remove
+            
 
-            if user.occupation
-              li
-                strong Occupation:
-                |  #{ user.occupation }
+      .modal-footer
+        button.btn(data-dismiss='modal', aria-hidden='true') Cancel
+        button.btn.btn-primary(type='submit') Save Image
 
-            if user.bloodType
-              li
-                strong Blood Type:
-                |  #{ user.bloodType }
 
-            if user.lastLocation.name
-              li
-                strong Last Location: 
-                |  #{ user.lastLocation.name }
-            li
-              strong Status:&nbsp; 
-                if user.status === 'online'
-                  span.label.label-success=user.status.toUpperCase()
-                else if user.status === 'offline'
-                  span.label=user.status.toUpperCase()
-                else
-                  span.label.label-important=user.status.toUpperCase()
-        p
-          #profile-options
-            if user.status === 'banned'
-              a.btn.btn-info.span1(href='/user/enable/#{ user.id }') Enable
-            else
-              a.btn.span1(href='/user/ban/#{ user.id }') Ban
-            a.btn.span1.btn-danger(href='/user/delete/#{ user.id }') Delete
-
-    #map-box.span6
-      input#latitude(type='hidden', value='#{ user.lastLocation.coords[1] }')
-      input#longitude(type='hidden', value='#{ user.lastLocation.coords[0] }')
-      input#user-id(type='hidden', value='#{ user.id }')
-      #map
 
 prepend scripts
   script(src="http://cdn.leafletjs.com/leaflet-0.4/leaflet.js")

@@ -26,6 +26,9 @@ module.exports = function(io) {
       // Log
       console.log('Data send from client:');
       console.dir(data);
+      // Create the current timestamp variable
+      var currentTimestamp = Math.round(+new Date()/1000);
+
       //---- Send message to the receiver if he/she is online
       Chat.checkReceiverStatus(data.receiverId, function(err, receiverSockIds) {
         // If there is a error
@@ -46,7 +49,8 @@ module.exports = function(io) {
           // Create the message object
           var messageObj = {
             senderId: socket.handshake.userId,
-            timestamp: data.timestamp,
+            deviceTimestamp: data.timestamp,
+            timestamp: currentTimestamp,
             message: data.message
           };
 
@@ -59,7 +63,7 @@ module.exports = function(io) {
       });
 
       //---- Save new conversation to the database
-      Chat.updateConversationList(socket.handshake.userId, data.receiverId, data.message, data.timestamp, function(err, response) {
+      Chat.updateConversationList(socket.handshake.userId, data.receiverId, data.message, data.timestamp, currentTimestamp, function(err, response) {
         // If there is a error
         if (err) {
           socket.emit('error', { message: 'There is error saving message to database' });
@@ -71,7 +75,7 @@ module.exports = function(io) {
       });
 
       //---- Save new message to database
-      Chat.addMessageToConversation(socket.handshake.userId, data.receiverId, data.message, data.timestamp, function(err, response) {
+      Chat.addMessageToConversation(socket.handshake.userId, data.receiverId, data.message, data.timestamp, currentTimestamp, function(err, response) {
         // If there is a error
         if (err) {
           socket.emit('error', { message: 'There is error saving message to database' });
