@@ -78,6 +78,7 @@ module.exports = {
 
     // Log
     console.log(messageObj);
+    console.log(JSON.stringify(messageObj));
 
     // Save the new message obj to list of the messages of 2 user
     // Sender
