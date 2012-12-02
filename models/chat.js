@@ -78,11 +78,11 @@ module.exports = {
 
     // Log
     console.log(messageObj);
-    console.log(JSON.stringify(messageObj));
+    // console.log(JSON.stringify(messageObj));
 
     // Save the new message obj to list of the messages of 2 user
     // Sender
-    redisClient.lpush('chat:' + senderId + ':' + receiverId + ':messages', JSON.stringify(messageObj), function(err, response) {
+    redisClient.rpush('chat:' + senderId + ':' + receiverId + ':messages', JSON.stringify(messageObj), function(err, response) {
       // If error
       if (err) {
         return callback(err, false);
@@ -93,7 +93,7 @@ module.exports = {
     });
 
     // Receiver
-    redisClient.lpush('chat:' + receiverId + ':' + senderId + ':messages', JSON.stringify(messageObj), function(err, response) {
+    redisClient.rpush('chat:' + receiverId + ':' + senderId + ':messages', JSON.stringify(messageObj), function(err, response) {
       // If error
       if (err) {
         return callback(err, false);
