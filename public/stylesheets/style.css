@@ -5136,6 +5136,13 @@ a.badge:hover {
 #info-box .datepicker th {
   text-align: center;
 }
+#info-box #profile-map {
+  height: 320px;
+}
+#info-box #update-location {
+  margin-top: 10px;
+  margin-left: 5px;
+}
 #photo-modal .uploaded-image {
   width: 220px;
   margin-left: 150px;

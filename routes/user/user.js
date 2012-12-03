@@ -216,6 +216,50 @@ module.exports = {
   },
 
   /*
+   * Function to update a user's location
+   */
+  updateLocation: function(req, res) {
+    User.findById(req.user.id, function(err, user) {
+      // If a err occured
+      if (err) {
+        return res.json({
+          status: 0,
+          error: {
+            type: 'system',
+            message: 'System Error'
+          }
+        });
+      }
+
+      // Get the longlat from the request
+      var lnglat = [parseFloat(req.body.longitude), parseFloat(req.body.latitude)];
+      user.lastLocation.coords = lnglat;
+
+      // Attempt to save the user
+      user.save(function(err, user) {
+        // If a err occured
+        if (err) {
+          return res.json({
+            status: 0,
+            error: {
+              type: 'system',
+              message: 'System Error'
+            }
+          });
+        }
+
+        // Return the successful message
+        return res.json({
+          status: 1,
+          lastLocation: user.lastLocation,
+          message: 'Successfully update your location'
+        });
+      });
+    });
+    
+  },
+
+  /*
    * Function for a user to logout
    */
   logout: function(req, res) {
@@ -235,5 +279,36 @@ module.exports = {
     // Passprot logout
     req.logout();
     res.redirect('/');
-  }
+  },
+
+
+  /*
+   * Function to check for long lat when update location
+   */
+  checkForLngLat: function(req, res, next) {
+    // Check if there is long, lat in the request
+    req.check('longitude', 'Invalid Longitude').notEmpty().isFloat().min(-180).max(180);
+    req.check('latitude', 'Invalid Latitude').notEmpty().isFloat().min(-90).max(90);
+    
+    // Create the mapped errors array
+    var errors = req.validationErrors(true);
+
+    // Get the errors object and transform it to an array
+    var msgArray =  _.map(errors, function(error) {
+      return error.msg;
+    });
+
+    if (errors) {
+      return res.json({
+        status: 0,
+        error: {
+          type: 'location',
+          message: msgArray[msgArray.length - 1]
+        }
+      });
+    }
+
+    // Process to the next function
+    next();
+  },
 };

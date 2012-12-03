@@ -11,6 +11,7 @@ var express = require('express')
   , RedisStore = require('connect-redis')(express)
   , passport = require('passport')
   , flash = require('connect-flash')
+  , validator = require('express-validator')
   , socketIO = require('socket.io');
 
 // Create the express and http server instance
@@ -22,7 +23,10 @@ app.configure(function(){
   app.set('view engine', 'jade');
   app.use(express.favicon());
   app.use(express.logger('dev'));
-  app.use(express.bodyParser());
+  app.use(express.bodyParser({
+    keepExtensions: true
+  }));
+  app.use(validator);
   app.use(express.methodOverride());
 
   // Session configuration

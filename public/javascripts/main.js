@@ -5,7 +5,43 @@ $(function() {
    */
   // Load function for x-editatable
   if ($('#info-box').length !== 0) {
+    // Initialize x-editatble
     OG.editable.initialize();
+    
+    // Initialize map
+    if ($('#latitude').val() !== 'undefined' && $('#longitude').val() !== 'undefined') {
+      // Initialzie the map
+      $('.notice-location').html('<em>Move the marker & click the button to set your location</em>');
+      OG.map.initialize($('#latitude').val(), $('#longitude').val(), 'profile-map');
+
+      // Add the marker
+      OG.map.addNormalMarker($('#latitude').val(), $('#longitude').val(), true);
+    } else {
+      // Initial the default map
+      console.log('Initialize default location: Tokyo');
+      $('.notice-location').html('<em>Your location hasn\'t been set. Move the marker & click the button to set your location</em>');
+      OG.map.initialize(35.689487, 139.691706, 'profile-map');
+      OG.map.addNormalMarker(35.689487, 139.691706, true);
+    }
+
+    // Update location when update location button is clicked
+    $('#update-location').click(function(e) {
+      e.preventDefault();
+
+      // Call the method to update location
+      OG.connect.updateLocation($('#longitude').val(), $('#latitude').val(), function(err, data) {
+        // Update the notice message based on the result
+        if (err) {
+          $('.notice-location').removeClass('text-info').addClass('text-error').html('<em>' + err.message + '</em>');
+        } else {
+          console.log(data);
+          if (data) {
+            console.log('abc');
+            $('.notice-location').removeClass('text-info').addClass('text-success').html('<em>' + data.message + '</em>');
+          }
+        }
+      });
+    });
   }
 
   /*
@@ -16,10 +52,10 @@ $(function() {
     if ($('#latitude').val() !== 'undefined' && $('#longitude').val() !== 'undefined') {
       OG.map.initialize($('#latitude').val(), $('#longitude').val(), 'map');
       // Add the marker
-      OG.map.addNormalMarker($('#latitude').val(), $('#longitude').val(), 'map');
+      OG.map.addNormalMarker($('#latitude').val(), $('#longitude').val(), false);
     } else {
       // Initial the default map
-      console.log('abc');
+      console.log('Initilaize default location: Tokyo');
       OG.map.initialize(35.689487, 139.691706, 'map');
     }
   }

@@ -74,8 +74,21 @@
     /*
      * Add normal marker to map (without popup)
      */
-    addNormalMarker: function(lat, lng) {
-      var marker = L.marker([lat, lng]).addTo(this.map);
+    addNormalMarker: function(lat, lng, draggable) {
+      var marker = L.marker([lat, lng], { draggable: draggable })
+      marker.addTo(this.map);
+
+      // If draggable, add event to get the longlat
+      if (draggable) {
+        marker.on('dragend', function(e) {
+          // Get the long lat
+          var latlng = marker.getLatLng();
+          console.log(latlng);
+          // Update the 2 hidden input
+          $('#latitude').val(latlng.lat);
+          $('#longitude').val(latlng.lng);
+        });
+      }
     },
 
     /*
@@ -261,6 +274,29 @@
           OG.ui.addUserGrid(data);
         }
 
+      });
+    },
+
+    /*
+     * Function to update user location
+     */
+    updateLocation: function(longitude, latitude, callback) {
+      // Create the data object to send to the server
+      var data = {
+        _csrf: $('#csrf').val(),
+        longitude: longitude,
+        latitude: latitude
+      };
+
+      // Send the request to the serer
+      $.post('/user/update-location', data, function(data) {
+        console.log(data);
+        if (data.status === 1) {
+          console.log('Draogn Linh');
+          callback(null, data);
+        } else {
+          callback(data.error, false);
+        }
       });
     }
   };

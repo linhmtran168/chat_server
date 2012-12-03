@@ -86,6 +86,15 @@ block content
           else
             a#blood-type(href='#', data-type='select', data-pk=user.id, data-value, data-prepend='Not selected', data-name='bloodType', data-original-title='Your blood type')
 
+      tr
+        td.user-label Location
+        td
+          p.text-info.notice-location
+          input#latitude(type='hidden', value='#{ user.lastLocation.coords[1] }')
+          input#longitude(type='hidden', value='#{ user.lastLocation.coords[0] }')
+          #profile-map
+          button#update-location.btn Update Location
+
   #photo-modal.modal.hide.fade(tabindex='-1', role='dialog', aria-labelledby='modal-label')
     form(action='/user/change-photo/', method='post', enctype='multipart/form-data')
       .modal-header

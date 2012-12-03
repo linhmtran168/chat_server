@@ -23,6 +23,7 @@ module.exports = function(app) {
   // Route for a user to update their information
   app.post('/user/update', helpers.ensureAuthenticated, userCtrl.updateProfileAPI);
   app.post('/user/change-photo', helpers.ensureAuthenticated, userCtrl.uploadPhoto);
+  app.post('/user/update-location', [helpers.ensureAuthenticated, userCtrl.checkForLngLat], userCtrl.updateLocation);
 
   // Route for logout
   app.get('/logout', [helpers.ensureAuthenticated], userCtrl.logout);
