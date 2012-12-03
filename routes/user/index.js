@@ -25,6 +25,8 @@ module.exports = function(app) {
   app.post('/user/change-photo', helpers.ensureAuthenticated, userCtrl.uploadPhoto);
   app.post('/user/update-location', [helpers.ensureAuthenticated, userCtrl.checkForLngLat], userCtrl.updateLocation);
 
+  // Route for getting users according to locations
+  app.get('/user/search-location-api', helpers.ensureAuthenticated, userCtrl.searchLocationAPI);
   // Route for logout
   app.get('/logout', [helpers.ensureAuthenticated], userCtrl.logout);
 };

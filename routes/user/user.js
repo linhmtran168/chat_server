@@ -3,6 +3,7 @@ var User = require('../../models/user')
   , _ = require('lodash')
   , helpers = require('./helpers')
   , crypto = require('crypto')
+  , util = require('util')
   , im = require('imagemagick');
 
 moment.lang('jp');
@@ -258,6 +259,31 @@ module.exports = {
     });
     
   },
+
+  /*
+   * Function to search for users using location data and return JSON
+   */
+  searchLocationAPI: function(req, res) {
+    // Get the bounds of the map
+    var southWest = req.query.bounds.southWest,
+        northEast = req.query.bounds.northEast;
+
+    // Create the box to query in Mongo
+    var box = [[parseFloat(southWest[1]), parseFloat(southWest[0])], [parseFloat(northEast[1]), parseFloat(northEast[0])]];
+
+    console.log(box);
+    // Query to find the users in the bounds
+    User.find({ 'lastLocation.coords': { $within: { $box: box } }, type: 'real' }, 'id username profilePhoto status lastLocation', function(err, users) {
+      if (err) {
+        return res.json({ error: 'System Error' });
+      }
+
+      console.log(util.inspect(users));
+      return res.json(users);
+    });
+
+  },
+  
 
   /*
    * Function for a user to logout
