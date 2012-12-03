@@ -13,6 +13,12 @@ block content
       li
         a(href="#") Your Favorite Users
 
+  if message.length !== 0
+    .row
+      .alert.alert-error.span5.offset7.login-alert
+        button.close(type='button', data-dismiss='alert') x
+        =message
+
   #image-box.span3.offset3.row
     #profile-image.span3.thumbnail
       img.span3(src='http://49.212.161.19:3050/#{ user.profilePhoto }')

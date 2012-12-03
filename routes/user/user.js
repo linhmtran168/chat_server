@@ -38,12 +38,16 @@ module.exports = {
     if (!_.isUndefined(req.user.birthday) && !_.isEmpty(req.user.birthday)) {
       req.user.birthday = moment.unix(parseInt(req.user.birthday, 10)).format('DD/MM/YYYY');
     }
+
+    // Get the error message 
+    var message = req.flash('message');
   
     // Render the profile page for user
     res.render('user/profile', {
       title: 'Your profile',
       user: req.user,
-      slug: 'profile'
+      slug: 'profile',
+      message: message
     });
   },
   /*
