@@ -15,7 +15,10 @@ var express = require('express')
   , socketIO = require('socket.io');
 
 // Create the express and http server instance
-var app = express();
+var app = express()
+  , secret = 'DragonLinh123456789'
+  , cookieParser = express.cookieParser(secret)
+  , redisStore = new RedisStore({ db: 'userSessions', maxAge: 1440000 });
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3100);
@@ -32,8 +35,8 @@ app.configure(function(){
   // Session configuration
   app.use(express.cookieParser());
   app.use(express.session({
-    store: new RedisStore({ db: 'userSessions', maxAge: 1440000 }),
-    secret: 'DragonLinh123456789'
+    store: redisStore,
+    secret: secret
   }));
 
   // Set up passport
@@ -82,7 +85,7 @@ var server = http.createServer(app);
 io = require('socket.io').listen(server);
 
 // Configure socketio
-require('./config/socketio')(io);
+require('./config/socketio')(io, redisStore, cookieParser);
 
 // Require passport configuration
 require('./config/passport');

@@ -60,6 +60,31 @@ $(function() {
     }
   }
 
+  // Chat part
+  if ($('#chat-box-profile').length !== 0) {
+    var currentUserId = $('#current-user').val()
+      , userId = $('#user-id').val()
+      , username = $('#username').text();
+    // Initialize chat
+    OG.chat.initialize(currentUserId, userId, username);
+
+    // Setting the socket to handler received message
+    OG.chat.socket.on('message-arrived', OG.chat.messageArriveHandler);
+    // When a message is enter, send the message to specific client
+    $('#message').keypress(function(e) {
+      if (e.which === 13) {
+        e.preventDefault();
+        OG.chat.sendMessage();
+      } 
+    });
+
+    // When the send button was click, send mesage
+    $('#send').click(function(e) {
+      OG.chat.sendMessage();
+    });
+  }
+
+
   /*
    * Search by location part
    * If this is the index view and have a #map-index initialize the map

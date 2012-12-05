@@ -73,7 +73,7 @@
 .search-box {
   margin-top: 10px;
 
-  #search-options {
+  .search-options {
     margin-top: 10px;
 
     select {
@@ -81,7 +81,7 @@
     }
   }
 
-  #search-options > * {
+  .search-options > * {
     margin-right: 20px;
   }
 
@@ -121,6 +121,7 @@
 /* User profile view */
 #profile-box {
   margin-top: 20px;
+  margin-bottom: 100px;
 
   #details {
     padding-bottom: 20px;
@@ -129,14 +130,35 @@
       margin-top: 10px;
       
       a {
+        margin-left: 56px;
         margin-right: 20px;
       }
     }
   }
 
+  #chat {
+    margin-left: 34px;
+
+    #chat-box-profile {
+      overflow: scroll;
+      height: 300px;
+    }
+
+    #chat-options {
+      margin-left: 0px;
+
+      #send {
+      float: right;
+      }
+    }
+  }
+}
+
+#map-box {
   #map {
-    width: 700px;
-    height: 500px;
+    width: 890px;
+    height: 250px;
+    margin-left: 20px;
   }
 }
 

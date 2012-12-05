@@ -11,6 +11,7 @@ module.exports = function(app) {
 
   // Homepage route
   app.get('/', [helpers.ensureAuthenticated, helpers.csrf], userCtrl.index);
+  app.get('/profile', [helpers.ensureAuthenticated, helpers.csrf], userCtrl.index);
 
   // Route for login
   app.get('/login', [helpers.ensureNotAuthenticated, helpers.csrf], userCtrl.login);
@@ -27,6 +28,14 @@ module.exports = function(app) {
 
   // Route for getting users according to locations
   app.get('/user/search-location-api', helpers.ensureAuthenticated, userCtrl.searchLocationAPI);
+  // Route for searching based on username
+  app.get('/user/search-username-api', helpers.ensureAuthenticated, userCtrl.searchUsernameAPI);
+  
+  // Route for showing a user profile
+  app.get('/user/:id', helpers.ensureAuthenticated, userCtrl.showProfile);
+
+  // Route for go to the list user view
+  app.get('/user', helpers.ensureAuthenticated, userCtrl.listUser);
   // Route for logout
   app.get('/logout', [helpers.ensureAuthenticated], userCtrl.logout);
 };

@@ -5053,13 +5053,13 @@ a.badge:hover {
 .search-box {
   margin-top: 10px;
 }
-.search-box #search-options {
+.search-box .search-options {
   margin-top: 10px;
 }
-.search-box #search-options select {
+.search-box .search-options select {
   margin-top: 10px;
 }
-.search-box #search-options > * {
+.search-box .search-options > * {
   margin-right: 20px;
 }
 #users-box {
@@ -5091,6 +5091,7 @@ a.badge:hover {
 /* User profile view */
 #profile-box {
   margin-top: 20px;
+  margin-bottom: 100px;
 }
 #profile-box #details {
   padding-bottom: 20px;
@@ -5099,11 +5100,26 @@ a.badge:hover {
   margin-top: 10px;
 }
 #profile-box #details #profile-options a {
+  margin-left: 56px;
   margin-right: 20px;
 }
-#profile-box #map {
-  width: 700px;
-  height: 500px;
+#profile-box #chat {
+  margin-left: 34px;
+}
+#profile-box #chat #chat-box-profile {
+  overflow: scroll;
+  height: 300px;
+}
+#profile-box #chat #chat-options {
+  margin-left: 0px;
+}
+#profile-box #chat #chat-options #send {
+  float: right;
+}
+#map-box #map {
+  width: 890px;
+  height: 250px;
+  margin-left: 20px;
 }
 /* Current user profile view */
 #image-box {

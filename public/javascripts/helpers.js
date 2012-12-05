@@ -236,7 +236,8 @@
       // Create the data object to send to the server
       var data = {
         searchKey: $('#search-username').val(),
-        statusOption: $('select[name=statusOption]').val()
+        statusOption: $('select[name=statusOption]').val(),
+        userType: $('select[name=userType]').val()
       };
 
       // Clear the list
@@ -340,7 +341,7 @@
             '</div>' +
           '</div>' + '</li>';
 
-        console.log(gridHtml);
+        // console.log(gridHtml);
 
       });
 
@@ -426,6 +427,71 @@
           '_csrf': csrfKey
         }
       });
+    }
+  };
+
+  /*
+   * Module for chat
+   */
+  window.OG.chat = {
+    /*
+     * Function to initialize socket.io
+     */
+    initialize: function(currentUserId, userId, username) {
+      this.currentUserId = currentUserId;
+      this.userId = userId;
+      this.username = username;
+      this.socket = io.connect('http://49.212.161.19:3100?userId=' + currentUserId);
+
+      this.socket.on('welcome', function(data) {
+        console.log(data.message);
+      });
+    },
+
+    /*
+     * Function to handle arrived message
+     */
+    messageArriveHandler: function(data) {
+      // If this is a message from another user (not the use with current profile), do nothint
+      console.log(data);
+      console.log(OG.chat.userId);
+      if (data.senderId !== OG.chat.userId) {
+        return;
+      }
+
+      // Create message html and add to the dom
+      var time = moment.unix(parseInt(data.timestamp, 10));
+      var chatDiv = $('#chat-box-profile');
+      var messageHtml = '<p>' + '<span class="text-info"><strong>' + OG.chat.username + '</strong> <em>(' + time.calendar() + ')</em>:</span> ' + data.message + '</p>';
+      chatDiv.append(messageHtml);
+      // Scroll to the bottom of the chat div
+      chatDiv.scrollTop(chatDiv.prop('scrollHeight') - chatDiv.height());
+
+      return;
+    },
+
+    /*
+     * Function to send message to another user
+     */
+    sendMessage: function() {
+      // Get the message
+      var message = $('#message').val();
+      // Get the timestamp
+      var timestamp = Math.round(+new Date()/1000);
+      // Send the message
+      OG.chat.socket.emit('message', { receiverId: OG.chat.userId, message: message, timestamp: timestamp });
+
+      // Add the message to the dom
+      var time = moment.unix(parseInt(timestamp, 10));
+      var chatDiv = $('#chat-box-profile');
+      var messageHtml = '<p><span class="text-error"><strong>You</strong> <em>(' + time.calendar() + ')</em>:</span> ' + message + '</p>'; 
+      chatDiv.append(messageHtml);
+
+      // Scroll to the bottom of the chat div
+      chatDiv.scrollTop(chatDiv.prop('scrollHeight') - chatDiv.height());
+      // Delete the message in the text input 
+      $('#message').val('');
+      $('#message').focus();
     }
   };
 
