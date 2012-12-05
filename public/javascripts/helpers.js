@@ -60,7 +60,7 @@
         '<div class="pop-up">' +
         '<a href="/user/' + user._id + '">' +
         '<strong>' + user.username + '<strong>' +
-        '<img class="img-rounded" src="/images/' + user.profilePhoto + '">' + 
+        '<img class="img-rounded" src="http://49.212.161.19:3050/' + user.profilePhoto + '">' + 
         '</a>' + 
         '<span class="label + ' + label + '">' + _(user.status).capitalize() + '</span>' +
         '</div>', {
@@ -329,7 +329,7 @@
           '<div class="thumbnail">' +
             '<div class="thumbnail-img-div">' +
               '<a href="/user/' + user._id +'">' +
-                '<img src="/images/' + user.profilePhoto + '">' +
+                '<img src="http://49.212.161.19:3050/' + user.profilePhoto + '">' +
               '</a>' +
             '</div>' +
             '<div class="caption">' +
