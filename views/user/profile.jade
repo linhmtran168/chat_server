@@ -70,7 +70,7 @@ block content
               strong Last Location: 
               |  #{ user.lastLocation.name }
           li
-            st)ong Status:&nbsp; 
+            strong Status:&nbsp; 
               if user.status === 'online'
                 span.label.label-success=user.status.toUpperCase()
               else if user.status === 'offline'
