@@ -1,0 +1,36 @@
+extends ../layout
+
+block content
+  .tab-bar
+    ul.nav.nav-tabs
+      li.offset3
+        a(href="/user") Your Profile
+      li.active
+        a(href="/user/recent-conversations") Recent Chats
+
+    #users-box.span12.offset3.row
+      ul#users-grid.thumbnails
+        if typeof(conversations) !== 'undefined'
+          if conversations.length !== 0
+            for conversation in conversations
+              li.span2
+                .thumbnail
+                  .thumbnail-img-div
+                    if conversation.partnerStatus !== 'deleted'
+                      a(href='/user/#{ conversation.partnerId }')
+                        img(src='http://49.212.161.19:3050/#{ conversation.partnerProfilePhoto }')
+                    else
+                      a(href='#')
+                        img(src='http://49.212.161.19:3050/#{ conversation.partnerProfilePhoto }')
+                  .caption
+                    h5=conversation.partnerUsername
+                    p=conversation.lastMessage.time
+                    
+                    p
+                      em Status:&nbsp; 
+                      if conversation.partnerStatus === 'online'
+                        span.label.label-success=conversation.partnerStatus.toUpperCase()
+                      else if conversation.partnerStatus === 'offline'
+                        span.label=conversation.partnerStatus.toUpperCase()
+                      else
+                        span.label.label-important=conversation.partnerStatus.toUpperCase()

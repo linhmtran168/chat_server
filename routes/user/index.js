@@ -30,6 +30,9 @@ module.exports = function(app) {
   app.get('/user/search-location-api', helpers.ensureAuthenticated, userCtrl.searchLocationAPI);
   // Route for searching based on username
   app.get('/user/search-username-api', helpers.ensureAuthenticated, userCtrl.searchUsernameAPI);
+
+  // Route for get recent conversations
+  app.get('/user/recent-conversations', helpers.ensureAuthenticated, userCtrl.recentConversations);
   
   // Route for showing a user profile
   app.get('/user/:id', helpers.ensureAuthenticated, userCtrl.showProfile);

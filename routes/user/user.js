@@ -1,5 +1,7 @@
 var User = require('../../models/user')
   , moment = require('moment')
+  , redis = require('redis')
+  , redisClient = redis.createClient()
   , _ = require('lodash')
   , helpers = require('./helpers')
   , crypto = require('crypto')
@@ -397,6 +399,96 @@ module.exports = {
       return res.json(users);
     });
   }, 
+
+  /*
+   * Function to list recent conversation
+   */
+  recentConversations: function(req, res) {
+    redisClient.sort('chat:' + req.user.id + ':conversations', 'BY', 'nosort', 'GET', '#', 'GET', 'chat:' + req.user.id + ':*' + ':lastMessage', function (err, replies) {
+      if (err) {
+        console.log(err);
+        res.redirect('/');
+      }
+
+      // Log
+      console.log(replies);
+
+      // If there is no conversations, return an empty array
+      if (replies.length === 0) {
+        return res.render('user/converation', {
+          conversations: replies,
+          slug: 'profile',
+          title: 'Recent Conversations'
+        });
+      }
+
+      var i, partnerIds = [], conversations = [];
+      // Create the array of conversations from the replies
+      for (i = 0; i < replies.length; i = i + 2) {
+        // Create the conversation object
+        var converObj = {
+          partnerId: replies[i],
+          lastMessage: JSON.parse(replies[i + 1])
+        };
+
+        // Create the readable time
+        converObj.lastMessage.time = moment.unix(parseInt(converObj.lastMessage.timestamp, 10)).calendar();
+
+        // Add the user id to the list of user id
+        partnerIds.push(replies[i]);
+
+        // Add to the conversations array
+        conversations.push(converObj);
+      }
+
+      // Log 
+      console.log(conversations);
+      console.log(partnerIds);
+
+      // Get the array of user from the mongo database that have userId in the list of userid conversations
+      User.find({ '_id': { $in: partnerIds } }, 'status profilePhoto username screenName', function(err, users) {
+        // If err
+        if (err) {
+          console.log(err);
+          res.redirect('/');
+        }
+
+        // Log
+        console.log(users);
+        // Iterate through the list of user and create the final results
+        _.forEach(users, function(user) {
+          // Get the index of current user in the list from redis
+          var userIndex = _.indexOf(partnerIds, user.id);
+
+          // Set the status and profile photo for the object in the conversations list
+          if (userIndex !== -1) {
+            conversations[userIndex].partnerStatus = user.status;
+            conversations[userIndex].partnerProfilePhoto = user.profilePhoto;
+            conversations[userIndex].partnerUsername = user.username;
+            conversations[userIndex].partnerScreenName = user.screenName;
+          }
+        });
+
+        // Iterate through all the conversation list and mark the the conversation with no status as delete
+        _.forEach(conversations, function(conversation) {
+          if (!_.has(conversation, 'partnerStatus')) {
+            // Mark the status as deleted and profilePhoto as default
+            conversation.partnerStatus = 'deleted';
+            conversation.partnerProfilePhoto = 'default_avatar.png';
+            conversation.partnerUsername = 'Unknown';
+            conversation.partnerScreenName = 'Unknown';
+          }
+        });
+
+        // Return the list of conversations
+        return res.render('user/conversation', {
+          conversations: conversations.reverse(),
+          slug: 'profile',
+          title: 'Recent Conversations'
+        });
+      });
+    });
+  },
 
   /*
    * Function for a user to logout
