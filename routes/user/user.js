@@ -170,7 +170,7 @@ module.exports = {
         extension = oldName.substr(oldName.lastIndexOf('.'));
 
         // Check file type
-        var allowed_extensions = ['.png', '.jpeg', '.jpg', '.JPG', '.JPEG'];
+        var allowed_extensions = ['.gif', '.GIF', '.png', '.jpeg', '.jpg', '.JPG', '.JPEG'];
         if (!_.contains(allowed_extensions, extension)) {
           req.flash('message', 'Upload image failed: you can only upload a image');
           return res.redirect('/');
