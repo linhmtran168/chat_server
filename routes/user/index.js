@@ -21,6 +21,14 @@ module.exports = function(app) {
     failureFlash: true,
   })]);
 
+  // Route for the current user to see its account
+  app.get('/dashboard', [helpers.ensureAuthenticated, helpers.csrf], userCtrl.updatePassword);
+  app.get('/dashboard/update-password', [helpers.ensureAuthenticated, helpers.csrf], userCtrl.updatePassword);
+  app.post('/dashboard/update-password', [helpers.ensureAuthenticated, userCtrl.checkUpdatePassword], userCtrl.updatePassword);
+  // Route for the current user  to update its email
+  app.get('/dashboard/update-email', [helpers.ensureAuthenticated, helpers.csrf], userCtrl.updateEmail);
+  app.post('/dashboard/update-email', [helpers.ensureAuthenticated, userCtrl.checkUpdateEmail], userCtrl.updateEmail);
+
   // Route for a user to update their information
   app.post('/user/update', helpers.ensureAuthenticated, userCtrl.updateProfileAPI);
   app.post('/user/change-photo', helpers.ensureAuthenticated, userCtrl.uploadPhoto);
@@ -41,4 +49,5 @@ module.exports = function(app) {
   app.get('/user', helpers.ensureAuthenticated, userCtrl.listUser);
   // Route for logout
   app.get('/logout', [helpers.ensureAuthenticated], userCtrl.logout);
+
 };
