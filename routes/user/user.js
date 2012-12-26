@@ -6,6 +6,7 @@ var User = require('../../models/user')
   , helpers = require('./helpers')
   , crypto = require('crypto')
   , util = require('util')
+  , bcrypt = require('bcrypt')
   , im = require('imagemagick');
 
 moment.lang('jp');
@@ -541,4 +542,124 @@ module.exports = {
     // Process to the next function
     next();
   },
+
+  /*
+   * Function to update password
+   */
+  updatePassword: function(req, res) {
+    // GET request
+    if (req.method !== 'POST') {
+      return res.render('user/updatePassword', {
+        title: 'Update Password',
+        message: req.flash('message')
+      });
+    }
+
+    // POST Request
+    User.findById(req.user.id, function(err, user) {
+      // If err
+      if (err) {
+        console.log(err);
+        req.flash('message', 'System Error');
+        return res.redirect('/');
+      }
+
+      // Change password
+      user.password = req.body.password;
+
+      // Save the user
+      user.save(function(err) {
+        // If err
+        if (err) {
+          console.log(err);
+          req.flash('message', 'System Error');
+          return res.redirect('/');
+        }
+
+        req.flash('message', 'Successfully changed password for user');
+        return res.redirect('/dashboard/update-password');
+      });
+    });
+  },
+
+  /*
+   * Function to update Email
+   */
+  updateEmail: function(req, res) {
+    // GET request
+    if (req.method !== 'POST') {
+      return res.render('user/updateEmail', {
+        title: 'Update Email',
+        message: req.flash('message')
+      });
+    }
+
+    // POST Request
+    User.findByIdAndUpdate(req.user.id, { email: req.body.email }, function(err, user) {
+      // If err
+      if (err) {
+        console.log(err);
+        req.flash('message', 'System Error');
+        return res.redirect('/');
+      }
+
+      req.flash('message', 'Successfully changed email');
+      return res.redirect('/dashboard/update-email');
+    });
+  },
+
+  /*
+   * Function to check for update password
+   */
+  checkUpdatePassword: function(req, res, next) {
+    // Check for password
+    req.check('oldPassword', 'Password must not be empty').notEmpty();
+    req.check('password', 'Password must have 6 to 20 characters').len(6, 20);
+    req.check('passwordConfirm', 'Password and password confirmation must match').notEmpty().equals(req.body.password);
+
+    // Create the mapped errors array
+    var errors = req.validationErrors(true);
+
+    if (!_.isEmpty(errors)) {
+      // Get the error messages
+      var msgArray =  _.map(errors, function(error) {
+        return error.msg;
+      });
+
+      req.flash('message', msgArray[msgArray.length - 1]);
+      return res.redirect('/dashboard/update-password');
+    }
+    
+    // Check for the old password
+    if (!bcrypt.compareSync(req.body.oldPassword, req.user.hash)) {
+      req.flash('message', 'The old password is wrong');
+      return res.redirect('/dashboard/update-password');
+    }
+
+    return next();
+  },
+
+  /*
+   * Function to check for updating email
+   */
+  checkUpdateEmail: function(req, res, next) {
+    // Check for email
+    req.check('email', 'Email should be a email').len(6, 64).isEmail();
+
+    // Create the mapped errors array
+    var errors = req.validationErrors(true);
+
+    if (!_.isEmpty(errors)) {
+      // Get the error messages
+      var msgArray =  _.map(errors, function(error) {
+        return error.msg;
+      });
+
+      req.flash('message', msgArray[msgArray.length - 1]);
+      return res.redirect('/dashboard/update-email');
+    }
+
+    return next();
+  }
+
 };

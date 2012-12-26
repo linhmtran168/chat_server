@@ -1,0 +1,41 @@
+extends ../layout
+
+block content
+  .tab-bar
+    ul.nav.nav-tabs
+      li.active.offset3
+        a(href='/dashboard') Admin Account
+
+
+  .row.offset2
+    #left-nav-admin.span3
+      ul.nav.nav-list.well
+        li.nav-header Admin Options
+        li
+          a(href='/dashboard/update-password') Change Password
+        li.active
+          a(href='/dashboard/update-email') Change Email
+        li.divider
+        li
+          a(href='/logout') Logout
+    #change-pass.span6.offset2
+      if message.length !== 0
+        .row
+          .alert.alert-error.span5.login-alert
+            button.close(type='button', data-dismiss='alert') x
+            =message
+
+      form.form(action='/dashboard/update-email', method='post')
+        legend Change Email
+        div.control-group
+          label.control-label(for='email') New Email:
+          div.controls
+            input#username.input-xlarge(type='text', name='email',
+            placeholder='Email')
+            
+
+        div.contrl-group
+          div.controls
+            button.btn.btn-primary(type='submit') Change Email
+            input(type='hidden', name='_csrf', value=token)
+
