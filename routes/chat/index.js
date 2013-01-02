@@ -3,9 +3,13 @@
  */
 var redis = require('redis')
   , _ = require('lodash')
-  , Chat = require('../../models/chat');
+  , Chat = require('../../models/chat')
+  , userCtrl = require('../user/user');
 
 module.exports = function(io) {
+  // Variable to hold the number of messages received
+  var numMessageSent = 0
+    , numMessageReceived = 0;
   /**
    * Socket io handling
    */
@@ -24,8 +28,12 @@ module.exports = function(io) {
      */
     socket.on('message', function(data) {
       // Log
-      console.log('Data send from client:');
+      console.log('Message - Data send from client:');
       console.dir(data);
+
+      // Increase number of messages sent
+      numMessageSent += 1;
+
       // Create the current timestamp variable
       var currentTimestamp = Math.round(+new Date()/1000);
 
@@ -88,13 +96,34 @@ module.exports = function(io) {
 
     });
 
+    /**
+     * Function to handle when client notify that it received a new messsage
+     * @param <Object> data { receiverId: '', timestamp: '', message: '' }
+    */
+    socket.on('message-received', function() {
+      // Increase the number of message received
+      numMessageReceived += 1;
+      console.log('Message-received: +1');
+    });
+
+
     // When socket disconnect
     socket.on('disconnect', function() {
       // Log
       console.log('Disconnect: ' + socket.id + ' to delete: ' + socket.handshake.userId);
       // When disconnect remove the socketId from the database
       Chat.removeUserSockId(socket.handshake.userId, socket.id);
-      // Change the status of the user to offline
+
+      // Calculate points for this user
+      userCtrl.updatePoints(numMessageSent, numMessageReceived, socket.handshake.userId, function(err, username, points) {
+        // Error case
+        if (err) {
+          console.log(err);
+          return;
+        }
+        // Log the result
+        console.log('Calculate Points - ' + username + '\'s points: ' + points);
+      });
     });
   });
 };

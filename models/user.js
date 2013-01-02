@@ -33,6 +33,9 @@ var userSchema = new Schema({
   viewedBy: [{ type: ObjectId, ref: 'User' }],
   loggedIn: { type: String },
   accessToken: { type: String, index: true },
+  points: { type: Number, min: 0, default: 10 },
+  pointsToday: { type: Number },
+  lastPointsUpdated: { type: Date },
   createdAt: { type: Date, default: Date.now, index: true },
   updatedAt: { type: Date, default: Date.now, index: true }
 });

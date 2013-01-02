@@ -441,7 +441,7 @@
       this.currentUserId = currentUserId;
       this.userId = userId;
       this.username = username;
-      this.socket = io.connect('http://49.212.161.19:3100?userId=' + currentUserId);
+      this.socket = io.connect('http://localhost:3100?userId=' + currentUserId);
 
       this.socket.on('welcome', function(data) {
         console.log(data.message);
@@ -455,9 +455,13 @@
       // If this is a message from another user (not the use with current profile), do nothint
       console.log(data);
       console.log(OG.chat.userId);
+
       if (data.senderId !== OG.chat.userId) {
         return;
       }
+
+      // Notify that received message successfully
+      OG.chat.socket.emit('message-received');
 
       // Create message html and add to the dom
       var time = moment.unix(parseInt(data.timestamp, 10));

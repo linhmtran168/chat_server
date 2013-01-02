@@ -19,7 +19,7 @@ module.exports = {
    * Function for render the main profile's user page
    */
   index: function(req, res) {
-    // If current user status is offline, change the statsu
+    // If current user status is offline, change the status
     if (req.user.status === "offline") {
       // Find the id of the current user in the database and update
       User.findByIdAndUpdate(req.user.id, { $set: { status: 'online' } }, function(err, user) {
@@ -605,6 +605,78 @@ module.exports = {
 
       req.flash('message', 'Successfully changed email');
       return res.redirect('/dashboard/update-email');
+    });
+  },
+
+  /*
+   * Function to update user poinst in chat
+   */
+  updatePoints: function(numMessageSent, numMessageReceived, userId, callback) {
+    var mesPerPoint = 10
+      , maxPointsPerDay = 50;
+
+    // Log
+    console.log('Messages sent: ' + numMessageSent + ' | Messages received: ' + numMessageReceived);
+    // Get the user from the database
+    User.findById(userId, function(err, user) {
+      if (err) {
+        console.log('Update point - error getting user');
+        return callback(err);
+      }
+
+      // If there is no usr with this id
+      if (!user) {
+        console.log('Update point - error getting user');
+        return callback('There is no user with this id');
+      }
+
+      // Reset the pointsToday of user if a day has passed
+      if (user.lastPointUpdated) {
+        var now = new Date();
+
+        if (now.getFullYear() > user.lastPointsUpdated.getFullYear()) {
+          user.pointsToday = 0;
+        } else if (now.getMonth() > user.lastPointsUpdated.getMonth()) {
+          user.pointsToday = 0;
+        } else if (now.getDate() > user.lastPointUpdated.getDate()) {
+          user.pointsToday = 0;
+        }
+      } else {
+        user.pointsToday = 0;
+      }
+
+      // Calculate points
+      if (user.pointsToday >= maxPointsPerDay) {
+        console.log('Update point - Max point reached');
+        return callback('Max point reached');
+      }
+
+      // Get the average points based of number of messsages sent & received
+      var pointsToAdd = parseInt(((numMessageSent + numMessageReceived) / 2) / mesPerPoint, 10);
+      
+      // Log
+      console.log('Points to add: ' + pointsToAdd);
+
+      // Calculate the poinst to-add based on the points that user received this day
+      pointsToAdd = (user.pointsToday + pointsToAdd) >= maxPointsPerDay ? (maxPointsPerDay - user.pointsToday) : pointsToAdd;
+
+      // Log
+      console.log('Points to add: ' + pointsToAdd);
+
+      // Add the points to user 
+      user.points += pointsToAdd;
+      user.pointsToday += pointsToAdd;
+      user.lastPointsUpdated = new Date();
+
+      // Attempt to save the user
+      user.save(function(err) {
+        if (err) {
+          console.log('Update point - error updating user');
+          return callback(err);
+        }
+
+        return callback(false, user.username, user.points);
+      }); 
     });
   },
 
