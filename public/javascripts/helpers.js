@@ -441,7 +441,7 @@
       this.currentUserId = currentUserId;
       this.userId = userId;
       this.username = username;
-      this.socket = io.connect('http://localhost:3100?userId=' + currentUserId);
+      this.socket = io.connect('http://49.212.161.19:3100?userId=' + currentUserId);
 
       this.socket.on('welcome', function(data) {
         console.log(data.message);

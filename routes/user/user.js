@@ -630,6 +630,12 @@ module.exports = {
         return callback('There is no user with this id');
       }
 
+      // If user gender is male or undefined, do nothing
+      if (user.gender !== 'female' || user.type === 'fake') {
+        console.log('Update point - user type error');
+        return callback('The user must be a female to get point');
+      }
+
       // Reset the pointsToday of user if a day has passed
       if (user.lastPointUpdated) {
         var now = new Date();
