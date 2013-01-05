@@ -4,9 +4,9 @@ block content
   .tab-bar
     ul.nav.nav-tabs
       li.offset3
-        a(href="/user") Your Profile
+        a(href="/user") マイプロフィール
       li.active
-        a(href="/user/recent-conversations") Recent Chats
+        a(href="/user/recent-conversations") 直近の会話
 
     #users-box.span12.offset3.row
       ul#users-grid.thumbnails
@@ -27,7 +27,7 @@ block content
                     p=conversation.lastMessage.time
                     
                     p
-                      em Status:&nbsp; 
+                      em ステータス:&nbsp; 
                       if conversation.partnerStatus === 'online'
                         span.label.label-success=conversation.partnerStatus.toUpperCase()
                       else if conversation.partnerStatus === 'offline'

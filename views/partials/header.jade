@@ -6,14 +6,14 @@ div.navbar.navbar-static-top
       if currentUser
         ul.nav
           if slug === 'profile'
-            li.active: a(href='/profile') Your Profile
+            li.active: a(href='/profile') マイプロフィール
           else
-            li: a(href='/profile') Your Profile
+            li: a(href='/profile') マイプロフィール
 
           if slug === 'explore'
-            li.active: a(href='/user') Explore User
+            li.active: a(href='/user') ユーザー検索する
           else
-            li: a(href='/user') Explore User
+            li: a(href='/user') ユーザー検索する
             
         ul.nav.pull-right
           li.divider-vertical
@@ -30,8 +30,8 @@ div.navbar.navbar-static-top
                 li
                   a(href='/dashboard')
                     i.icon-th-large
-                    | &nbsp;Dashboard
+                    | &nbsp;ダッシュボード
                 li 
                   a(href='/logout')
                     i.icon-eject
-                    | &nbsp;Logout
+                    | &nbsp;ログアウト

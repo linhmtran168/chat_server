@@ -4,20 +4,20 @@ block content
   .tab-bar
     ul.nav.nav-tabs
       li.active.offset3
-        a(href='/dashboard') Admin Account
+        a(href='/dashboard') ユーザーアカウント
 
 
   .row.offset2
     #left-nav-admin.span3
       ul.nav.nav-list.well
-        li.nav-header Admin Options
+        li.nav-header ユーザーオプション
         li
-          a(href='/dashboard/update-password') Change Password
+          a(href='/dashboard/update-password') パスワード変更
         li.active
-          a(href='/dashboard/update-email') Change Email
+          a(href='/dashboard/update-email') メールアドレス変更
         li.divider
         li
-          a(href='/logout') Logout
+          a(href='/logout') ログアウト
     #change-pass.span6.offset2
       if message.length !== 0
         .row
@@ -26,9 +26,9 @@ block content
             =message
 
       form.form(action='/dashboard/update-email', method='post')
-        legend Change Email
+        legend メールアドレス変更
         div.control-group
-          label.control-label(for='email') New Email:
+          label.control-label(for='email') 新メールアドレス:
           div.controls
             input#username.input-xlarge(type='text', name='email',
             placeholder='Email')
@@ -36,6 +36,6 @@ block content
 
         div.contrl-group
           div.controls
-            button.btn.btn-primary(type='submit') Change Email
+            button.btn.btn-primary(type='submit') メールアドレス変更
             input(type='hidden', name='_csrf', value=token)
 

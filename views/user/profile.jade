@@ -9,9 +9,9 @@ block content
   .tab-bar
     ul.nav.nav-tabs
       li.offset3
-        a(href="/user") Back to Search
+        a(href="/user") 検索に戻る
       li.active
-        a(href="#") #{ user.username }'s Profile
+        a(href="#") #{ user.username }のユーザー情報
 
   #map-box.span12.offset3.row
     input#latitude(type='hidden', value='#{ user.lastLocation.coords[1] }')
@@ -28,7 +28,7 @@ block content
         h4#username=user.username
         ul
           li
-            strong Email: 
+            strong メール: 
             |   #{ user.email }
 
           li
@@ -37,40 +37,40 @@ block content
 
           if user.gender 
             li
-              strong Gender:
+              strong 性別:
               |  #{ user.gender }
 
           if user.about
             li
-              strong About:
+              strong 詳細:
               |  #{ user.about }
 
           if user.birthday
             li
-              strong Birthday:
+              strong 生年月日:
               |  #{ user.birthday }
 
           if user.screenName
             li
-              strong Screen Name:
+              strong スクリーン名:
               |  #{ user.screenName }
 
           if user.occupation
             li
-              strong Occupation:
+              strong 職業:
               |  #{ user.occupation }
 
           if user.bloodType
             li
-              strong Blood Type:
+              strong 血液型:
               |  #{ user.bloodType }
 
           if user.lastLocation.name
             li
-              strong Last Location: 
+              strong 最後の場所: 
               |  #{ user.lastLocation.name }
           li
-            strong Status:&nbsp; 
+            strong ステータス:&nbsp; 
               if user.status === 'online'
                 span.label.label-success=user.status.toUpperCase()
               else if user.status === 'offline'
@@ -81,8 +81,8 @@ block content
     #chat.span7
       #chat-box-profile.well
       .row#chat-options
-        textarea#message.span5(rows='1', placeholder='Message')
-        button#send.btn.span2 Send Message
+        textarea#message.span5(rows='1', placeholder='メッセージ')
+        button#send.btn.span2 メッセージ送信
 
 prepend scripts
   script(src="http://cdn.leafletjs.com/leaflet-0.4/leaflet.js")

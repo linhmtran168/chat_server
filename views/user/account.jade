@@ -9,9 +9,9 @@ block content
   .tab-bar
     ul.nav.nav-tabs
       li.active.offset3
-        a(href="/user") Your Profile
+        a(href="/user") マイプロフィール
       li
-        a(href="/user/recent-conversations") Recent Chats
+        a(href="/user/recent-conversations") 直近の会話
 
   if message.length !== 0
     .row
@@ -25,82 +25,82 @@ block content
 
       .caption
         #image-options
-          a.btn.btn-info(href='#photo-modal', data-toggle='modal') Change Photo
+          a.btn.btn-info(href='#photo-modal', data-toggle='modal') プロフィール画像の変更
 
   #info-box.span9
     input#csrf(type='hidden', name='_csrf', value=token)
     table.info-table.table.table-bordered.table-hover
       tr
-        td.user-label Username
+        td.user-label ユーザー名
         td=user.username 
       tr
-        td.user-label Email
+        td.user-label メール
         td=user.email 
       tr
-        td.user-label Screen Name
+        td.user-label スクリーン名
         td
           if user.screenName
-            a#screen-name(href='#', data-type='text', data-pk=user.id, data-name='screenName', data-original-title='Ogorin Screen Name')=user.screenName
+            a#screen-name(href='#', data-type='text', data-pk=user.id, data-name='screenName', data-original-title='スクリーン名')=user.screenName
           else
-            a#screen-name(href='#', data-type='text', data-pk=user.id, data-name='screenName', data-original-title='Ogorin Screen Name')
+            a#screen-name(href='#', data-type='text', data-pk=user.id, data-name='screenName', data-original-title='スクリーン名')
       tr
-        td.user-label Status Message
+        td.user-label ステータスメッセージ
         td
           if user.statusMessage
-            a#status-message(href='#', data-type='textarea', data-pk=user.id, data-name='statusMessage', data-original-title='Status Message')=user.statusMessage
+            a#status-message(href='#', data-type='textarea', data-pk=user.id, data-name='statusMessage', data-original-title='ステータスメッセージ')=user.statusMessage
           else
-            a#status-message(href='#', data-type='textarea', data-pk=user.id, data-name='statusMessage', data-inputclass='span3', data-original-title='Status Message')
+            a#status-message(href='#', data-type='textarea', data-pk=user.id, data-name='statusMessage', data-inputclass='span3', data-original-title='ステータスメッセージ')
       tr
-        td.user-label Gender
+        td.user-label 性別
         td
           if user.gender
-            a#gender(href='#', data-type='select', data-pk=user.id, data-name='gender', data-original-title='Select your gender')=user.gender
+            a#gender(href='#', data-type='select', data-pk=user.id, data-name='gender', data-original-title='性別')=user.gender
           else
-            a#gender(href='#', data-type='select', data-pk=user.id, data-name='gender', data-value, data-prepend='Not selected', data-original-title='Select your gender')
+            a#gender(href='#', data-type='select', data-pk=user.id, data-name='gender', data-value, data-prepend='選択されていない', data-original-title='性別')
       tr
-        td.user-label Birthday
+        td.user-label 生年月日
         td
           if user.birthday
-            a#birthday(href='#', data-type='date', data-pk=user.id, data-name='birthday', data-original-title='Your birthday')=user.birthday
+            a#birthday(href='#', data-type='date', data-pk=user.id, data-name='birthday', data-original-title='生年月日')=user.birthday
           else
-            a#birthday(href='#', data-type='date', data-pk=user.id, data-name='birthday', data-original-title='Your birthday')
+            a#birthday(href='#', data-type='date', data-pk=user.id, data-name='birthday', data-original-title='生年月日')
       tr
-        td.user-label About
+        td.user-label 詳細
         td
           if user.about
-            a#about(href='#', data-type='textarea', data-pk=user.id, data-name='about', data-original-title='About you')=user.about
+            a#about(href='#', data-type='textarea', data-pk=user.id, data-name='about', data-original-title='詳細')=user.about
           else
-            a#about(href='#', data-type='textarea', data-pk=user.id, data-name='about', data-original-title='About you')
+            a#about(href='#', data-type='textarea', data-pk=user.id, data-name='about', data-original-title='詳細')
       tr
-        td.user-label Occupation
+        td.user-label 職業
         td
           if user.occupation
-            a#occupation(href='#', data-type='text', data-pk=user.id, data-name='occupation', data-original-title='Your occupation')=user.occupation
+            a#occupation(href='#', data-type='text', data-pk=user.id, data-name='occupation', data-original-title='職業')=user.occupation
           else
-            a#occupation(href='#', data-type='text', data-pk=user.id, data-name='occupation', data-original-title='Your occupation')
+            a#occupation(href='#', data-type='text', data-pk=user.id, data-name='occupation', data-original-title='職業')
       tr
-        td.user-label Blood Type
+        td.user-label 血液型
         td
           if user.bloodType
-            a#blood-type(href='#', data-type='select', data-pk=user.id, data-name='bloodType', data-original-title='Your blood type')=user.bloodType
+            a#blood-type(href='#', data-type='select', data-pk=user.id, data-name='bloodType', data-original-title='血液型')=user.bloodType
           else
-            a#blood-type(href='#', data-type='select', data-pk=user.id, data-value, data-prepend='Not selected', data-name='bloodType', data-original-title='Your blood type')
+            a#blood-type(href='#', data-type='select', data-pk=user.id, data-value, data-prepend='Not selected', data-name='bloodType', data-original-title='血液型')
 
       tr
-        td.user-label Location
+        td.user-label 場所
         td
           p.text-info.notice-location
           input#user-id(type='hidden', value='#{ user.id }')
           input#latitude(type='hidden', value='#{ user.lastLocation.coords[1] }')
           input#longitude(type='hidden', value='#{ user.lastLocation.coords[0] }')
           #profile-map
-          button#update-location.btn Update Location
+          button#update-location.btn 場所を更新
 
   #photo-modal.modal.hide.fade(tabindex='-1', role='dialog', aria-labelledby='modal-label')
     form(action='/user/change-photo/', method='post', enctype='multipart/form-data')
       .modal-header
         button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-        h3#modal-label Change profile photo
+        h3#modal-label プロフィール画像の変更
 
       .modal-body
         .fileupload.fileupload-new(data-provides='fileupload')
@@ -109,17 +109,17 @@ block content
           .fileupload-preview.fileupload-exists.thumbnail.uploaded-image
           .image-buttons
             span.btn.btn-file
-              span.fileupload-new Select image
-              span.fileupload-exists Change
+              span.fileupload-new 画像選択
+              span.fileupload-exists 変更
               input(type='file', name='profilePhoto')
               input(type='hidden', name='_csrf', value=token)
 
-            a.btn.fileupload-exists(href='#', data-dismiss='fileupload') Remove
+            a.btn.fileupload-exists(href='#', data-dismiss='fileupload') 削除
             
 
       .modal-footer
-        button.btn(data-dismiss='modal', aria-hidden='true') Cancel
-        button.btn.btn-primary(type='submit') Save Image
+        button.btn(data-dismiss='modal', aria-hidden='true') キャンセル
+        button.btn.btn-primary(type='submit') 画像保存
 
 
 

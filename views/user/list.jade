@@ -9,9 +9,9 @@ block content
   .tabbable.tab-bar
     ul.nav.nav-tabs
       li.active.offset3
-        a(href="#tab1", data-toggle="tab") Search by Location
+        a(href="#tab1", data-toggle="tab") 場所で検索
       li
-        a(href="#tab2", data-toggle="tab") Search by Username
+        a(href="#tab2", data-toggle="tab") ユーザー名で検索
 
     .tab-content
       #tab2.tab-pane.fade
@@ -29,17 +29,17 @@ block content
                     i.icon-search
             .row
               .search-options.span9.offset6
-                  button.btn(type='submit') Search Username
+                  button.btn(type='submit') ユーザー検索
                   select(name='statusOption').span3
-                    option(value='all') All users
-                    option(value='banned') Only banned users
-                    option(value='online') Only online users
-                    option(value='offline') Only offline users
+                    option(value='all') 全てのユーザー
+                    option(value='banned') 禁制されたユーザーのみ
+                    option(value='online') オンラインユーザーのみ
+                    option(value='offline') オフラインユーザーのみ
 
                   select(name='userType').span2
-                    option(value='all') All user
-                    option(value='real') Real user
-                    option(value='fake') Part-timer
+                    option(value='all') 全てのユーザー
+                    option(value='real') 実ユーザ
+                    option(value='fake') アルバイト
 
 
 
@@ -56,7 +56,7 @@ block content
                       .caption
                         h5=user.username
                         p
-                          em Status:&nbsp; 
+                          em ステータス:&nbsp; 
                           if user.status === 'online'
                             span.label.label-success=user.status.toUpperCase()
                           else if user.status === 'offline'

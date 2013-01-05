@@ -48,7 +48,7 @@ module.exports = {
   
     // Render the profile page for user
     res.render('user/account', {
-      title: 'Your profile',
+      title: 'マイプロフィール',
       user: req.user,
       slug: 'profile',
       message: message
@@ -60,7 +60,7 @@ module.exports = {
   login: function(req, res) {
     var message = req.flash('error');
     res.render('user/login', {
-      title: 'Part-timer Login',
+      title: 'ログイン',
       message: message,
     });
   },
@@ -173,7 +173,7 @@ module.exports = {
         // Check file type
         var allowed_extensions = ['.gif', '.GIF', '.png', '.jpeg', '.jpg', '.JPG', '.JPEG'];
         if (!_.contains(allowed_extensions, extension)) {
-          req.flash('message', 'Upload image failed: you can only upload a image');
+          req.flash('message', 'ファイルの拡張子が間違いました');
           return res.redirect('/');
         }
 
@@ -324,14 +324,14 @@ module.exports = {
       
       // Change the format of the user type
       if (user.type === 'fake') {
-        user.type = 'Part-timer';
+        user.type = 'アルバイト';
       } else {
-        user.type = 'Real User';
+        user.type = '実ユーザ';
       }
 
       // Render the profile page
       return res.render('user/profile', {
-        title: 'User Profile',
+        title: 'ユーザー情報',
         slug: 'explore',
         user: user
       });
@@ -346,14 +346,14 @@ module.exports = {
     User.find({ _id: { $ne: req.user.id } }, null, { sort: 'username' }, function(err, users) {
       if (err) {
         return res.render('user/list', {
-          title: 'Explore User',
+          title: 'ユーザー検索する',
           slug: 'explore',
         });
       }
 
       // Render the list view
       res.render('user/list', {
-        title: 'Explore User',
+        title: 'ユーザー検索する',
         slug: 'explore',
         users: users,
         message: req.flash('message')
@@ -419,7 +419,7 @@ module.exports = {
         return res.render('user/converation', {
           conversations: replies,
           slug: 'profile',
-          title: 'Recent Conversations'
+          title: '直近の会話'
         });
       }
 
@@ -485,7 +485,7 @@ module.exports = {
         return res.render('user/conversation', {
           conversations: conversations.reverse(),
           slug: 'profile',
-          title: 'Recent Conversations'
+          title: '直近の会話'
         });
       });
     });
@@ -550,7 +550,7 @@ module.exports = {
     // GET request
     if (req.method !== 'POST') {
       return res.render('user/updatePassword', {
-        title: 'Update Password',
+        title: 'パスワード変更',
         message: req.flash('message')
       });
     }
@@ -576,7 +576,7 @@ module.exports = {
           return res.redirect('/');
         }
 
-        req.flash('message', 'Successfully changed password for user');
+        req.flash('message', 'パスワードの変更が成功しました');
         return res.redirect('/dashboard/update-password');
       });
     });
@@ -589,7 +589,7 @@ module.exports = {
     // GET request
     if (req.method !== 'POST') {
       return res.render('user/updateEmail', {
-        title: 'Update Email',
+        title: 'メールアドレス変更',
         message: req.flash('message')
       });
     }
@@ -603,7 +603,7 @@ module.exports = {
         return res.redirect('/');
       }
 
-      req.flash('message', 'Successfully changed email');
+      req.flash('message', 'メールアドレスの変更が成功しました');
       return res.redirect('/dashboard/update-email');
     });
   },
@@ -691,9 +691,9 @@ module.exports = {
    */
   checkUpdatePassword: function(req, res, next) {
     // Check for password
-    req.check('oldPassword', 'Password must not be empty').notEmpty();
-    req.check('password', 'Password must have 6 to 20 characters').len(6, 20);
-    req.check('passwordConfirm', 'Password and password confirmation must match').notEmpty().equals(req.body.password);
+    req.check('oldPassword', 'パスワードは必須です').notEmpty();
+    req.check('password', 'パスワードは6文字以上、20文字以内でなければなりません').len(6, 20);
+    req.check('passwordConfirm', 'パスワードとパスワードの確認は一致しなけらばなりません').notEmpty().equals(req.body.password);
 
     // Create the mapped errors array
     var errors = req.validationErrors(true);
@@ -710,7 +710,7 @@ module.exports = {
     
     // Check for the old password
     if (!bcrypt.compareSync(req.body.oldPassword, req.user.hash)) {
-      req.flash('message', 'The old password is wrong');
+      req.flash('message', '旧パスワードは正しくありません');
       return res.redirect('/dashboard/update-password');
     }
 
@@ -722,7 +722,7 @@ module.exports = {
    */
   checkUpdateEmail: function(req, res, next) {
     // Check for email
-    req.check('email', 'Email should be a email').len(6, 64).isEmail();
+    req.check('email', 'メールアドレスは正しくありません').len(6, 64).isEmail();
 
     // Create the mapped errors array
     var errors = req.validationErrors(true);
