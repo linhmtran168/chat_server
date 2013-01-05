@@ -50,7 +50,7 @@ module.exports = function(io) {
           console.log('User is offline');
           // Emit notify offline event to the client that send the message
 
-          socket.emit('notify-offline', { message: 'The user you want to send message is offline, he/she will receive your message when he/she is online again'  });
+          socket.emit('notify-offline', { message: 'このユーザーはオフラインしています。彼・彼女は再びオンラインになればあなたのメッセージを読むことができます。'  });
         } else {
           console.log('Successfully getting socket id for user Id ' + data.receiverId);
 
