@@ -48,9 +48,24 @@ module.exports = function(io) {
         // Else
         if (!receiverSockIds) {
           console.log('User is not connected to socket service');
-          // Emit notify offline event to the client that send the message
 
+          // Check if user online or not
+          userCtrl.checkUserStatus(data.receiverId, function(isOnline, err) {
+            // If there is error
+            if (err) {
+              console.log('There is error checking user status');
+              return;
+            }
+
+            if (isOnline) {
+              console.log('User is online');
+              return;
+            }
+
+          console.log('User is offline');
+          // Emit notify offline event to the client that send the message
           socket.emit('notify-offline', { message: 'このユーザーはオフラインしています。彼・彼女は再びオンラインになればあなたのメッセージを読むことができます。'  });
+          });
         } else {
           console.log('Successfully getting socket id for user Id ' + data.receiverId);
 

@@ -505,6 +505,36 @@ module.exports = {
   },
 
   /*
+   * Function for check user's status
+   */
+  checkUserStatus: function(userId, callback) {
+    // Get the user with this ID
+    User.findById(userId, function(err, user) {
+      if (err) {
+        console.log(err);
+        return callback(null, err);
+      }
+
+      // If there is no user with this id
+      if (!user) {
+        err = {
+          type: 'no-user',
+          messsage: 'There is no user with this id'
+        };
+
+        return callback(null, err);
+      }
+
+      if (user.status === 'online') {
+        return callback(true, null);
+      }
+
+      // Return true if user is offline
+      return callback(false, null);
+    });
+  },
+
+  /*
    * Function for a user to logout
    */
   logout: function(req, res) {
