@@ -44,6 +44,7 @@ block content
 
 
         #users-box.span12.offset3.row
+          input#current-page(type='hidden', value='#{ page }')
           ul#users-grid.thumbnails
             if typeof(users) !== 'undefined'
               if users.length !== 0
@@ -63,6 +64,8 @@ block content
                             span.label=user.status.toUpperCase()
                           else
                             span.label.label-important=user.status.toUpperCase()
+          div.hide.load-more
+            i.icon-spinner.icon-spin.icon-2x
 
       #tab1.tab-pane.active
         if typeof(message) !== 'undefined' && message.length !== 0

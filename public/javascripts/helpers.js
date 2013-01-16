@@ -203,6 +203,9 @@
    */
   window.OG.connect = {
 
+    // Variable to indicate there is a request tor not
+    isRequesting: false,
+
     /*
      * Function to get users location from the server
      */
@@ -241,38 +244,51 @@
       };
 
       // Clear the list
-      $('#users-grid').html('');
+      $('#users-grid').empty();
+      // Show loading icon
+      $('.load-more').show();
+      // Reset page value
+      $('#current-page').val(1);
 
+      OG.connect.isRequesting = true;
       // Send the request to the server
       $.get('/user/search-username-api', data, function(data) {
         console.log(data);
         if (data.length > 0 && typeof(data.error) === 'undefined') {
           // console.log("abc");
           OG.ui.addUserGrid(data);
+          OG.connect.isRequesting = false;
         }
 
       });
     },
 
     /*
-     * Function to get list of parttimers when search for username
+     * Function to get more parttimers
      */
-    getParttimers: function() {
-      // Creat the data object to send to ther server
+    getMoreUsers: function(page) {
+      // Create the data object to send to the server
       var data = {
         searchKey: $('#search-username').val(),
-        statusOption: $('select[name=statusOption]').val()
+        statusOption: $('select[name=statusOption]').val(),
+        userType: $('select[name=userType]').val(),
+        page: page + 1,
       };
 
-      // Clear the list
-      $('#users-grid').html('');
+      // Show loading icon
+      $('.load-more').show();
+
+      OG.connect.isRequesting = true;
 
       // Send the request to the server
-      $.get('/parttimer/search-parttimer', data, function(data) {
+      $.get('/user/search-username-api', data, function(data) {
         console.log(data);
+        $('.load-more').hide();
         if (data.length > 0 && typeof(data.error) === 'undefined') {
           // console.log("abc");
+          $('#current-page').val(page + 1);
           OG.ui.addUserGrid(data);
+          OG.connect.isRequesting = false;
         }
 
       });
@@ -335,7 +351,7 @@
             '<div class="caption">' +
               '<h5>' + user.username + '</h5>' +
               '<p>' + 
-                '<em>Status:&nbsp;</em>' +
+                '<em>ステータス:&nbsp;</em>' +
                 '<span class="label ' + label + '">' + user.status.toUpperCase() + '</span>'+
               '</p>' +
             '</div>' +
@@ -345,9 +361,8 @@
 
       });
 
-      console.log(gridHtml);
       // add the content to the view
-      $('#users-grid').html(gridHtml);
+      $('#users-grid').html($('#users-grid').html() + gridHtml);
     }
   };
 

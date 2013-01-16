@@ -123,4 +123,18 @@ $(function() {
     return false;
   });
 
+  /*
+   * Loading more page for user
+   */
+  if ($('#user-form').length !== 0) {
+        $(window).scroll(function() {
+      if ($(window).scrollTop() === $(document).height() - $(window).height()) {
+        // Call the API to get more user 
+        if (!OG.connect.isRequesting) {
+          OG.connect.getMoreUsers(parseInt($('#current-page').val(), 10));
+        }
+      }
+    });
+  }
+
 });

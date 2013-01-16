@@ -343,7 +343,7 @@ module.exports = {
    */
   listUser: function(req, res) {
     // Find all online users
-    User.find({ _id: { $ne: req.user.id } }, null, { sort: 'username' }, function(err, users) {
+    User.find({ _id: { $ne: req.user.id } }, null, { sort: 'username', limit: 60 }, function(err, users) {
       if (err) {
         return res.render('user/list', {
           title: 'ユーザー検索する',
@@ -356,6 +356,7 @@ module.exports = {
         title: 'ユーザー検索する',
         slug: 'explore',
         users: users,
+        page: 1,
         message: req.flash('message')
       });
     });
@@ -377,6 +378,18 @@ module.exports = {
     var usernameRegex = new RegExp(searchKey, 'i');
     // console.log(usernameRegex);
 
+    var itemsPerPage = 60;
+    var skipItems = 0;
+    // If there is a page number in the query caculate the kip Item
+    if (req.query.page) {
+      var page = parseInt(req.query.page, 10);
+
+      // If valid page variable, increase the skipItems
+      if (_.isNumber(page) && page > 0) {
+        skipItems += itemsPerPage * (page - 1);
+      }
+    }
+
     // Create the query based on status option
     if (statusOption === 'all' && userType === 'all') {
       query = User.find({ 'username': usernameRegex, _id: { $ne: req.user.id } });
@@ -388,7 +401,7 @@ module.exports = {
       query = User.find({ 'username': usernameRegex, _id: { $ne: req.user.id }, 'status': statusOption, type: userType });
     }
 
-    query.select('id username type profilePhoto email status lastLocation').exec(function(err, users) {
+    query.skip(skipItems).limit(itemsPerPage).select('id username type profilePhoto email status lastLocation').sort({ username: 1 }).exec(function(err, users) {
 
       if (err) {
         // return handleError(err);
