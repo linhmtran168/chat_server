@@ -47,7 +47,7 @@ module.exports = function(io) {
 
         // Else
         if (!receiverSockIds) {
-          console.log('User is offline');
+          console.log('User is not connected to socket service');
           // Emit notify offline event to the client that send the message
 
           socket.emit('notify-offline', { message: 'このユーザーはオフラインしています。彼・彼女は再びオンラインになればあなたのメッセージを読むことができます。'  });
