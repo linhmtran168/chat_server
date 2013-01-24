@@ -59,13 +59,13 @@
       marker.bindPopup(
         '<div class="pop-up">' +
         '<a href="/user/' + user._id + '">' +
-        '<strong>' + user.username + '<strong>' +
+        '<strong>' + user.username + '</strong>' +
         '<img class="img-rounded" src="http://49.212.161.19:3050/' + user.profilePhoto + '">' + 
         '</a>' + 
         '<span class="label + ' + label + '">' + _(user.status).capitalize() + '</span>' +
         '</div>', {
         maxWidth: 80,
-        maxHeight: 100
+        maxHeight: 120
       });
       marker.on('mouseover', marker.openPopup.bind(marker));
       this.usersLayerGroup.addLayer(marker);
