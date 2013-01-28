@@ -418,7 +418,7 @@ module.exports = {
    * Function to list recent conversation
    */
   recentConversations: function(req, res) {
-    redisClient.sort('chat:' + req.user.id + ':conversations', 'BY', 'nosort', 'GET', '#', 'GET', 'chat:' + req.user.id + ':*' + ':lastMessage', function (err, replies) {
+    redisClient.sort('chat:' + req.user.id + ':conversations', 'BY', 'nosort', 'GET', '#', 'GET', 'chat:' + req.user.id + ':*' + ':lastMessage', 'LIMIT', 0, 60, function (err, replies) {
       if (err) {
         console.log(err);
         res.redirect('/');

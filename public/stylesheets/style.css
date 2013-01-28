@@ -5764,6 +5764,11 @@ a.badge:hover {
 #photo-modal .image-buttons a {
   margin-left: 20px;
 }
+/* Conversation view */
+.chat-list-notice {
+  font-size: 18px;
+  text-align: center;
+}
 /* Test view */
 #chat-box {
   position: relative;

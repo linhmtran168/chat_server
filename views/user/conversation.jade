@@ -9,6 +9,8 @@ block content
         a(href="/user/recent-conversations") 直近の会話
 
     #users-box.span12.offset3.row
+      p.lead.muted.chat-list-notice 
+        em このページは最近おしゃべりした６０ユーザーが表示します
       ul#users-grid.thumbnails
         if typeof(conversations) !== 'undefined'
           if conversations.length !== 0
@@ -27,7 +29,6 @@ block content
                     p=conversation.lastMessage.time
                     
                     p
-                      em ステータス:&nbsp; 
                       if conversation.partnerStatus === 'online'
                         span.label.label-success=conversation.partnerStatus.toUpperCase()
                       else if conversation.partnerStatus === 'offline'
