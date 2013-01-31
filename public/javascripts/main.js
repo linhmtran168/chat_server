@@ -11,7 +11,7 @@ $(function() {
     // Initialize map
     if ($('#latitude').val() !== 'undefined' && $('#longitude').val() !== 'undefined') {
       // Initialzie the map
-      $('.notice-location').html('<em>Move the marker & click the button to set your location</em>');
+      $('.notice-location').html('<em>位置情報を設定するために、マーカーを移動して、ボタンをクリックします</em>');
       OG.map.initialize($('#latitude').val(), $('#longitude').val(), 'profile-map');
 
       // Add the marker
@@ -19,7 +19,7 @@ $(function() {
     } else {
       // Initial the default map
       console.log('Initialize default location: Tokyo');
-      $('.notice-location').html('<em>Your location hasn\'t been set. Move the marker & click the button to set your location</em>');
+      $('.notice-location').html('<em>位置情報が設定されません。 位置情報を設定するために、マーカーを移動して、ボタンをクリックします</em>');
       OG.map.initialize(35.689487, 139.691706, 'profile-map');
       OG.map.addNormalMarker(35.689487, 139.691706, true);
     }
@@ -38,6 +38,10 @@ $(function() {
           if (data) {
             console.log('abc');
             $('.notice-location').removeClass('text-info').addClass('text-success').html('<em>' + data.message + '</em>');
+            // Time out to display the default text
+            setTimeout(function() { 
+              $('.notice-location').removeClass('text-success').addClass('text-info').html('<em>位置情報を設定するために、マーカーを移動して、ボタンをクリックします</em>');
+            }, 6000);
           }
         }
       });

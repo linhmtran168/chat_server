@@ -256,7 +256,7 @@ module.exports = {
         return res.json({
           status: 1,
           lastLocation: user.lastLocation,
-          message: 'Successfully update your location'
+          message: '位置情報の更新が成功しました'
         });
       });
     });
