@@ -406,10 +406,10 @@
 
       $('#blood-type').editable({
         source: [
+          { value: 'AB', text: 'AB' },
           { value: 'O', text: 'O' },
           { value: 'A', text: 'A' },
           { value: 'B', text: 'B' },
-          { value: 'AB', text: 'AB' }
         ],
         url: updateUrl,
         params: {
