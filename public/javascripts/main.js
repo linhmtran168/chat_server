@@ -41,7 +41,7 @@ $(function() {
             // Time out to display the default text
             setTimeout(function() { 
               $('.notice-location').removeClass('text-success').addClass('text-info').html('<em>位置情報を設定するために、マーカーを移動して、ボタンをクリックします</em>');
-            }, 6000);
+            }, 3000);
           }
         }
       });
