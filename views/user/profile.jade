@@ -29,7 +29,7 @@ block content
         ul
           li
             strong メール: 
-            |   #{ user.email }
+            a(href='mailto:#{ user.email }') #{ user.email }
 
           li
             strong Type:
