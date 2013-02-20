@@ -429,7 +429,7 @@ module.exports = {
 
       // If there is no conversations, return an empty array
       if (replies.length === 0) {
-        return res.render('user/converation', {
+        return res.render('user/conversation', {
           conversations: replies,
           slug: 'profile',
           title: '直近の会話'
