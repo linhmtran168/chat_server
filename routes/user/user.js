@@ -276,7 +276,7 @@ module.exports = {
 
     console.log(box);
     // Query to find the users in the bounds
-    User.find({ 'lastLocation.coords': { $within: { $box: box } }, type: 'real' }, 'id username profilePhoto status lastLocation', function(err, users) {
+    User.find({ 'lastLocation.coords': { $within: { $box: box } }, type: 'real' }, 'id username profilePhoto status lastLocation gender', function(err, users) {
       if (err) {
         return res.json({ error: 'System Error' });
       }
