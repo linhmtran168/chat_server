@@ -46,7 +46,26 @@
      * Add marker to the map
      */
     addMarker: function(lat, lng, user) {
-      var marker = L.marker([parseFloat(lat), parseFloat(lng)]);
+      var marker;
+
+      if (user.gender === 'male') {
+        marker = L.marker([parseFloat(lat), parseFloat(lng)]);
+      } else if (user.gender === 'female') {
+        var pinkIcon = L.icon({
+          iconUrl: 'http://49.212.161.19:3050/marker_pink.png',
+          shadowUrl: 'http://49.212.161.19:3050/marker_shadow.png',
+          popupAnchor: [14, 7],
+        });
+        marker = L.marker([parseFloat(lat), parseFloat(lng)], { icon: pinkIcon });
+      } else {
+        var grayIcon = L.icon({
+          iconUrl: 'http://49.212.161.19:3050/marker_gray.png',
+          shadowUrl: 'http://49.212.161.19:3050/marker_shadow.png',
+          popupAnchor: [14, 7],
+        });
+        marker = L.marker([parseFloat(lat), parseFloat(lng)], { icon: grayIcon });
+      }
+
       var label;
       if (user.status === 'online') {
         label = 'label-success';
@@ -75,7 +94,12 @@
      * Add normal marker to map (without popup)
      */
     addNormalMarker: function(lat, lng, draggable) {
-      var marker = L.marker([lat, lng], { draggable: draggable })
+      var redIcon = L.icon({
+        iconUrl: 'http://49.212.161.19:3050/marker_red.png',
+        shadowUrl: 'http://49.212.161.19:3050/marker_shadow.png'
+      });
+      
+      var marker = L.marker([lat, lng], { icon: redIcon, draggable: draggable });
       marker.addTo(this.map);
 
       // If draggable, add event to get the longlat
