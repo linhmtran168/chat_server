@@ -24,7 +24,13 @@ app.configure(function(){
   app.set('port', process.env.PORT || 3100);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
+
+  // Static asset
+  app.use(require('less-middleware')({ src: __dirname + '/public' }));
+  app.use(express.static(path.join(__dirname, 'public')));
   app.use(express.favicon());
+
+  // Logger
   app.use(express.logger('dev'));
   app.use(express.bodyParser({
     keepExtensions: true
@@ -58,8 +64,6 @@ app.configure(function(){
   });
 
   app.use(app.router);
-  app.use(require('less-middleware')({ src: __dirname + '/public' }));
-  app.use(express.static(path.join(__dirname, 'public')));
 });
 
 app.configure('development', function(){
